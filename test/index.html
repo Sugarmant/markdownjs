@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../dist/markdown.css">
+    <style>
+        body{display:flex;}
+        body>div{width:100%}
+    </style>
+</head>
+<body>
+
+    <div class="editor"></div>
+    <div class="content"></div>
+    <script src="../dist/markdown.js"></script>
+    <script>
+        
+        const md = new Markdown('.editor')
+        md.onAnalysed(function(html){
+            document.querySelector('.content').innerHTML = html
+        })
+        
+        const exmple = decodeURIComponent("%3E%20%E8%BF%99%E6%98%AF%E5%BC%95%E7%94%A8%E5%86%85%E5%AE%B9%0A%23%23%20h2%E6%A0%87%E9%A2%98%0A%23%23%23%20h3%E6%A0%87%E9%A2%98%0A%E8%BF%99%E6%98%AF%60%E6%A0%87%E8%AE%B0%60%E5%86%85%E5%AE%B9%0A%E8%BF%99%E6%98%AF**%E7%B2%97%E4%BD%93**%E5%86%85%E5%AE%B9%0A%E8%BF%99%E6%98%AF*%E6%96%9C%E4%BD%93*%E5%86%85%E5%AE%B9%0A%E4%B8%8B%E6%96%B9%E6%98%AF%E5%88%86%E5%89%B2%E7%BA%BF%0A***%0A%5B%E8%BF%99%E6%98%AF%E8%B6%85%E9%93%BE%E6%8E%A5%5D(http%3A%2F%2Fwww.6pian.cn)%0A%60%60%60json%0A%7B%0A%20%20%22name%22%3A%20%22markdown%22%2C%0A%20%20%22version%22%3A%20%221.0.0%22%2C%0A%20%20%22description%22%3A%20%22%E5%A4%84%E7%90%86%E5%89%8D%E7%AB%AF%E6%96%87%E7%AB%A0%E7%9A%84markdown%22%2C%0A%20%20%22main%22%3A%20%22index.js%22%2C%0A%20%20%22scripts%22%3A%20%7B%0A%20%20%20%20%22test%22%3A%20%22echo%20%5C%22Error%3A%20no%20test%20specified%5C%22%20%26%26%20exit%201%22%2C%0A%20%20%20%20%22build%22%3A%20%22webpack%20--config%20webpack.config.js%20--mode%20production%20%22%2C%0A%20%20%20%20%22watch%22%3A%20%22webpack%20--watch%20--config%20webpack.config.js%20--mode%20production%20%22%0A%20%20%7D%0A%7D%0A%60%60%60%0A%60%60%60html%0A%3C!DOCTYPE%20html%3E%0A%3Chtml%20lang%3D%22en%22%3E%0A%3Chead%3E%0A%20%20%20%20%3Cmeta%20charset%3D%22UTF-8%22%3E%0A%20%20%20%20%3Cmeta%20http-equiv%3D%22X-UA-Compatible%22%20content%3D%22IE%3Dedge%22%3E%0A%20%20%20%20%3Cmeta%20name%3D%22viewport%22%20content%3D%22width%3Ddevice-width%2C%20initial-scale%3D1.0%22%3E%0A%20%20%20%20%3Ctitle%3EDocument%3C%2Ftitle%3E%0A%20%20%20%20%3Clink%20rel%3D%22stylesheet%22%20href%3D%22..%2Fdist%2Fmarkdown.css%22%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%20%20body%7Bdisplay%3Aflex%3B%7D%0A%20%20%20%20%20%20%20%20body%3Ediv%7Bwidth%3A100%25%7D%0A%20%20%20%20%3C%2Fstyle%3E%0A%3C%2Fhead%3E%0A%3Cbody%3E%0A%20%20%20%20%3Cdiv%20class%3D%22editor%22%3E%3C%2Fdiv%3E%0A%20%20%20%20%3Cdiv%20class%3D%22content%22%3E%3C%2Fdiv%3E%0A%20%20%20%20%3Cscript%20src%3D%22..%2Fdist%2Fmarkdown.js%22%3E%3C%2Fscript%3E%0A%20%20%20%20%3Cscript%3E%0A%20%20%20%20%20%20%20%20const%20md%20%3D%20new%20Markdown('.editor')%0A%20%20%20%20%20%20%20%20md.onAnalysed(function(html)%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20document.querySelector('.content').innerHTML%20%3D%20html%0A%20%20%20%20%20%20%20%20%7D)%0A%20%20%20%20%3C%2Fscript%3E%0A%3C%2Fbody%3E%0A%3C%2Fhtml%3E%0A%60%60%60%0A")
+        md.setExmple(exmple)
+        
+        const html = md.render(exmple)
+        document.querySelector('.content').innerHTML = html
+    </script>
+</body>
+</html>

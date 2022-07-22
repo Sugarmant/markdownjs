@@ -1,0 +1,80 @@
+.__markdown__ .section {
+  width: 100%;
+  line-height: 26px;
+  min-height: 26px;
+  white-space: normal;
+}
+.__markdown__ .section.code {
+  color: #15479f;
+}
+.__markdown__ .section.h1 {
+  font-size: 2em;
+  font-weight: bold;
+  margin-block-start: 0.67em;
+  margin-block-end: 0.67em;
+}
+.__markdown__ .section.h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-block-start: 0.67em;
+  margin-block-end: 0.67em;
+}
+.__markdown__ .section.h3 {
+  font-size: 1.17em;
+  font-weight: bold;
+  margin-block-start: 0.67em;
+  margin-block-end: 0.67em;
+}
+.__markdown__ .section.h4 {
+  font-weight: bold;
+  margin-block-start: 0.67em;
+  margin-block-end: 0.67em;
+}
+.__markdown__ .section.h5 {
+  font-size: 0.83em;
+  font-weight: bold;
+  margin-block-start: 0.67em;
+  margin-block-end: 0.67em;
+}
+.__markdown__ .section.h6 {
+  font-size: 0.67em;
+  font-weight: bold;
+  margin-block-start: 0.67em;
+  margin-block-end: 0.67em;
+}
+.__markdown__ .code {
+  background-color: #f0f0f0;
+}
+.__markdown_result__ .reference {
+  background-color: #f0f0f0;
+  font-size: 12px;
+  color: #666;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  border-left: solid 5px #ccc;
+}
+.__markdown_result__ .splitLine {
+  border-bottom: solid 1.5px #eee;
+  margin: 10px 0;
+}
+.__markdown_result__ .ref {
+  color: red;
+  background-color: antiquewhite;
+  padding: 0 5px;
+}
+.__markdown_result__ .b {
+  font-weight: 600;
+}
+.__markdown_result__ .i {
+  font-style: italic;
+}
+.__markdown_result__ code {
+  display: block;
+  background-color: #1E1E1E;
+  color: #eee;
+  padding: 10px;
+  box-sizing: border-box;
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 14px;
+  white-space: pre-wrap;
+}
