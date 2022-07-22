@@ -13,6 +13,8 @@ const markEditor = html=>{
             }
             i++
         }else{
+
+            /* 标题处理 */
             if(dom.innerHTML.slice(0,7) == '###### ') dom.className = 'section h6'
             if(dom.innerHTML.slice(0,6) == '##### ') dom.className = 'section h5'
             if(dom.innerHTML.slice(0,5) == '#### ') dom.className = 'section h4'
@@ -20,6 +22,7 @@ const markEditor = html=>{
             if(dom.innerHTML.slice(0,3) == '## ') dom.className = 'section h2'
             if(dom.innerHTML.slice(0,2) == '# ') dom.className = 'section h1'
 
+            /* 标记点处理 */
             if(dom.innerText.indexOf('`')>-1 && dom.innerText.match(/`/g).length>=2){
                 let text = dom.innerText
                 let resultText = ''
@@ -38,8 +41,10 @@ const markEditor = html=>{
                         text = ''
                     }
                 }
-                console.log(resultText)
             }
+
+            /* 引用内容处理 */
+            if(dom.innerText.slice(0,2) == '> ') dom.className = 'section reference'
         }
     }
 }

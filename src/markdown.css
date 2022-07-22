@@ -46,12 +46,20 @@
   margin-block-start: 0.67em;
   margin-block-end: 0.67em;
 }
-.__markdown__ .code {
+.__markdown__ .section.code {
   background-color: #f0f0f0;
+}
+.__markdown__ .section.reference {
+  background-color: #f0f0f0;
+  font-size: 14px;
+  color: #666;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  border-left: solid 5px #ccc;
 }
 .__markdown_result__ .reference {
   background-color: #f0f0f0;
-  font-size: 12px;
+  font-size: 14px;
   color: #666;
   padding: 5px 10px;
   box-sizing: border-box;

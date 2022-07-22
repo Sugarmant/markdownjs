@@ -5,7 +5,6 @@ export function handleCode(children){
     let list = []
     for(let i=0;i<children.length;i++){
         let dom = children[i]
-        console.log(dom)
         if(dom.innerText.slice(0,3) == '```'){
             let language = dom.innerText.slice(3).replace(' ','').replace('\n','').replace('\r','')
             let preHTML = ''
