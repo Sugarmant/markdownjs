@@ -7,6 +7,9 @@
 .__markdown__ .section.code {
   color: #15479f;
   white-space: pre-wrap;
+  font-size: 14px;
+  line-height: normal;
+  min-height: auto;
 }
 .__markdown__ .section.h1 {
   font-size: 2em;
