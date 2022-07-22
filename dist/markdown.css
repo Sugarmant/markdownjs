@@ -10,6 +10,7 @@ code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-fami
 }
 .__markdown__ .section.code {
   color: #15479f;
+  white-space: pre-wrap;
 }
 .__markdown__ .section.h1 {
   font-size: 2em;
