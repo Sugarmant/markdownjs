@@ -2,6 +2,9 @@
 https://prismjs.com/download.html#themes=prism-tomorrow&languages=markup+css+clike+javascript+json+markup-templating+jsx+tsx+typescript&plugins=jsonp-highlight */
 code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-family:Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#2d2d2d}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.block-comment,.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#999}.token.punctuation{color:#ccc}.token.attr-name,.token.deleted,.token.namespace,.token.tag{color:#e2777a}.token.function-name{color:#6196cc}.token.boolean,.token.function,.token.number{color:#f08d49}.token.class-name,.token.constant,.token.property,.token.symbol{color:#f8c555}.token.atrule,.token.builtin,.token.important,.token.keyword,.token.selector{color:#cc99cd}.token.attr-value,.token.char,.token.regex,.token.string,.token.variable{color:#7ec699}.token.entity,.token.operator,.token.url{color:#67cdcc}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.inserted{color:green}
 
+.__markdown__ {
+  color: #333;
+}
 .__markdown__ .section {
   width: 100%;
   line-height: 26px;
@@ -9,10 +12,11 @@ code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-fami
   white-space: normal;
 }
 .__markdown__ .section.code {
+  background-color: #f0f0f0;
   color: #15479f;
   white-space: pre-wrap;
   font-size: 14px;
-  line-height: normal;
+  line-height: 22px;
   min-height: auto;
 }
 .__markdown__ .section.h1 {
@@ -20,12 +24,16 @@ code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-fami
   font-weight: bold;
   margin-block-start: 0.67em;
   margin-block-end: 0.67em;
+  margin-top: 35px;
 }
 .__markdown__ .section.h2 {
   font-size: 1.5em;
   font-weight: bold;
   margin-block-start: 0.67em;
   margin-block-end: 0.67em;
+  border-bottom: solid 1px #ececec;
+  padding-bottom: 12px;
+  margin-top: 35px;
 }
 .__markdown__ .section.h3 {
   font-size: 1.17em;
@@ -50,8 +58,11 @@ code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-fami
   margin-block-start: 0.67em;
   margin-block-end: 0.67em;
 }
-.__markdown__ .section.code {
-  background-color: #f0f0f0;
+.__markdown__ .section.code.start {
+  margin-top: 1em;
+}
+.__markdown__ .section.code.end {
+  margin-bottom: 1em;
 }
 .__markdown__ .section.reference {
   background-color: #f0f0f0;
@@ -61,6 +72,24 @@ code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-fami
   box-sizing: border-box;
   border-left: solid 5px #ccc;
 }
+.__markdown_result__ {
+  color: #333;
+  line-height: 26px;
+}
+.__markdown_result__ h1 {
+  margin-top: 35px;
+}
+.__markdown_result__ h2 {
+  border-bottom: solid 1px #ececec;
+  padding-bottom: 12px;
+  margin-top: 35px;
+}
+.__markdown_result__ h3 {
+  font-size: 1.17em;
+  font-weight: bold;
+  margin-block-start: 0.67em;
+  margin-block-end: 0.67em;
+}
 .__markdown_result__ .reference {
   background-color: #f0f0f0;
   font-size: 14px;
@@ -68,6 +97,7 @@ code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-fami
   padding: 5px 10px;
   box-sizing: border-box;
   border-left: solid 5px #ccc;
+  line-height: 26px;
 }
 .__markdown_result__ .splitLine {
   border-bottom: solid 1.5px #eee;
@@ -85,6 +115,7 @@ code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-fami
   font-style: italic;
 }
 .__markdown_result__ code {
+  line-height: 22px;
   display: block;
   background-color: #1E1E1E;
   color: #eee;

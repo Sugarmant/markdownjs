@@ -4,11 +4,15 @@ const markEditor = html=>{
         let dom = children[i]
         dom.className = 'section'
         if(dom.innerText.slice(0,3) == '```'){
-            dom.className = 'section code'
+            dom.className = 'section code start'
+            if(dom.innerHTML != dom.innerText) dom.innerHTML = dom.innerText 
             for(let e=i+1;e<children.length;e++){
                 let codeDom = children[e]
                 codeDom.className = 'section code'
-                if(codeDom.innerText.slice(0,3) == '```') break;
+                if(codeDom.innerText.slice(0,3) == '```'){
+                    codeDom.className = 'section code end'
+                    break;
+                } 
                 i++
             }
             i++
@@ -28,7 +32,6 @@ const markEditor = html=>{
                 let resultText = ''
                 while(text != ''){
                     let dotIndex = text.indexOf('`');
-                    console.log(text.match(/`/g))
                     if(dotIndex>-1 && text.match(/`/g).length>=2){
                         resultText+=text.slice(0,dotIndex)+'<span>`'
                         text = text.slice(dotIndex+1)
