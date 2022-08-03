@@ -39,11 +39,9 @@ class Markdown{
 
         /* 处理键盘事件 */
         entry.addEventListener('keydown',e=>{
-            if(e.ctrlKey && e.keyCode == 66){
-                e.preventDefault()
-            }
-            
-            if(e.ctrlKey && e.keyCode == 90){
+            console.log(e)
+            /* 阻止 加粗 斜体 撤回 恢复 事件*/
+            if(e.ctrlKey && e.keyCode == 66 || e.keyCode == 73 || e.keyCode == 90 || e.keyCode == 89){
                 e.preventDefault()
             }
 
@@ -55,16 +53,24 @@ class Markdown{
                         entry.innerHTML = '<div class="section"></div>'
                     }
                 }
-                if(e.ctrlKey && e.keyCode == 66){
-                    rangeBold(range)
+
+                if(e.ctrlKey){
+                    if(e.keyCode == 66){
+                        rangeBold(range)
+                    }else if(e.keyCode == 73){
+                        rangeItalics(range)
+                    }
                 }
+
                 if(e.ctrlKey && e.keyCode == 90){
                     this.undo()
+                }else if(e.ctrlKey && e.keyCode == 89){
+                    this.redo()
                 }else{
                     this.analysed(this.render(entry))
                     this.saveCache()
                 }
-                
+
             },10)
         })
 
@@ -188,8 +194,23 @@ class Markdown{
         const range = window.getSelection().getRangeAt(0)
         range.setStart(this.entry.childNodes[last.position[0]].childNodes[0],last.position[1]);
         range.setEnd(this.entry.childNodes[last.position[0]].childNodes[0],last.position[1]);
+    }
+
+    /* 恢复 */
+    redo(){
+        console.log(this.cacheIndex, this.cache.length)
+        if(this.cacheIndex == this.cache.length-1) return
         
-        
+        this.cacheIndex++
+        const next = this.cache[this.cacheIndex]
+        this.entry.innerHTML = next.node.innerHTML
+        this.analysed(this.render(next.node))
+
+        const cloneEntry = this.entry.cloneNode(true)
+        this.lastEdit = cloneEntry.innerHTML
+        const range = window.getSelection().getRangeAt(0)
+        range.setStart(this.entry.childNodes[next.position[0]].childNodes[0],next.position[1]);
+        range.setEnd(this.entry.childNodes[next.position[0]].childNodes[0],next.position[1]);
     }
 }
 
@@ -210,8 +231,26 @@ function rangeBold(r){
         r.endContainer.nodeValue = et.slice(0,r.endOffset) + '**' + et.slice(r.endOffset,et.length)
         r.setStart(r.startContainer,start+2)
         r.setEnd(r.endContainer,end)
-    }
-    
+    } 
+}
+
+/* 处理斜体内容 */
+function rangeItalics(r){
+    const start = r.startOffset
+    const end = r.endOffset
+    const t = r.startContainer.wholeText
+    if(r.startContainer == r.endContainer){
+        const resultText = t.slice(0,start)+'*'+t.slice(start,end)+'*'+t.slice(end,t.length)
+        r.startContainer.nodeValue = resultText
+        r.setStart(r.startContainer,start+1)
+        r.setEnd(r.startContainer,start+1+t.slice(start,end).length)
+    }else{
+        const et = r.endContainer.wholeText
+        r.startContainer.nodeValue = t.slice(0,r.startOffset) + '*' + t.slice(r.startOffset,t.length)
+        r.endContainer.nodeValue = et.slice(0,r.endOffset) + '*' + et.slice(r.endOffset,et.length)
+        r.setStart(r.startContainer,start+1)
+        r.setEnd(r.endContainer,end)
+    } 
 }
 
 window['Markdown'] = Markdown
