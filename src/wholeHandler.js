@@ -3,9 +3,11 @@ import './prism/prism.js'
 /* 处理code */
 export function handleCode(children){
     let list = []
+
+    /* 处理code */
     for(let i=0;i<children.length;i++){
         let dom = children[i]
-        if(dom.innerText.slice(0,3) == '```'){
+        if(dom instanceof HTMLDivElement && dom.innerText.slice(0,3) == '```'){
             let language = dom.innerText.slice(3).replace(' ','').replace('\n','').replace('\r','')
             let preHTML = ''
             for(let e=i+1;e<children.length;e++){

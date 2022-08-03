@@ -193,13 +193,25 @@ class Markdown{
     }
 }
 
-/* 处理加粗 */
-function rangeBold(r){
-    
-    let clone = r.cloneContents(true)
-    r.deleteContents()
 
-    r.insertNode(new Text('**'+clone.childNodes[0].wholeText+'**'))
+/* 处理加粗内容 */
+function rangeBold(r){
+    const start = r.startOffset
+    const end = r.endOffset
+    const t = r.startContainer.wholeText
+    if(r.startContainer == r.endContainer){
+        const resultText = t.slice(0,start)+'**'+t.slice(start,end)+'**'+t.slice(end,t.length)
+        r.startContainer.nodeValue = resultText
+        r.setStart(r.startContainer,start+2)
+        r.setEnd(r.startContainer,start+2+t.slice(start,end).length)
+    }else{
+        const et = r.endContainer.wholeText
+        r.startContainer.nodeValue = t.slice(0,r.startOffset) + '**' + t.slice(r.startOffset,t.length)
+        r.endContainer.nodeValue = et.slice(0,r.endOffset) + '**' + et.slice(r.endOffset,et.length)
+        r.setStart(r.startContainer,start+2)
+        r.setEnd(r.endContainer,end)
+    }
+    
 }
 
 window['Markdown'] = Markdown
