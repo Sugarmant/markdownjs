@@ -76,7 +76,6 @@ class Markdown{
         entry.addEventListener('mouseup',e=>{
             setTimeout(()=>{
                 this.saveCache()
-                console.log(this.getCursor())
             },10)
         })
         this.saveCache(true)
