@@ -253,11 +253,12 @@ function rangeBold(r){
     const start = r.startOffset
     const end = r.endOffset
     const t = r.startContainer.wholeText
+    const inner = t.slice(start,end)?t.slice(start,end):'加粗样式'
     if(r.startContainer == r.endContainer){
-        const resultText = t.slice(0,start)+'**'+t.slice(start,end)+'**'+t.slice(end,t.length)
+        const resultText = t.slice(0,start)+'**'+inner+'**'+t.slice(end,t.length)
         r.startContainer.nodeValue = resultText
         r.setStart(r.startContainer,start+2)
-        r.setEnd(r.startContainer,start+2+t.slice(start,end).length)
+        r.setEnd(r.startContainer,start+2+inner.length)
     }else{
         const et = r.endContainer.wholeText
         r.startContainer.nodeValue = t.slice(0,r.startOffset) + '**' + t.slice(r.startOffset,t.length)
@@ -272,11 +273,12 @@ function rangeItalics(r){
     const start = r.startOffset
     const end = r.endOffset
     const t = r.startContainer.wholeText
+    const inner = t.slice(start,end)?t.slice(start,end):'斜体样式'
     if(r.startContainer == r.endContainer){
-        const resultText = t.slice(0,start)+'*'+t.slice(start,end)+'*'+t.slice(end,t.length)
+        const resultText = t.slice(0,start)+'*'+inner+'*'+t.slice(end,t.length)
         r.startContainer.nodeValue = resultText
         r.setStart(r.startContainer,start+1)
-        r.setEnd(r.startContainer,start+1+t.slice(start,end).length)
+        r.setEnd(r.startContainer,start+1+inner.length)
     }else{
         const et = r.endContainer.wholeText
         r.startContainer.nodeValue = t.slice(0,r.startOffset) + '*' + t.slice(r.startOffset,t.length)
