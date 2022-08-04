@@ -60,26 +60,26 @@ const markEditor = (html,app)=>{
             //         con = con.slice(first+1)
                     
             //         let second = con.indexOf('`')
-            //         if(second>-1){
+            //         if(second>-1 && pre[pre.length-1]!='>'){
             //             handled += pre+'<span class="ref">`'
             //             handled += con.slice(0,second)+'`</span>'
             //             con = con.slice(second+1)
             //         }else{
+                        
             //             handled += pre+(first>-1?'`':'')
             //         }
             //     }
             //     handled+=con
             //     if(handled != dom.innerHTML){
             //         dom.innerHTML = handled;
+            //         app.setCursor(...position)
             //     }
-
-            //     app.setCursor(...position)
             // }
 
             /* 加粗内容处理 */
             // if(dom.innerHTML && dom.innerText.indexOf('**')>-1){
             //     const position = app.getCursor()
-            //     let con = dom.innerText
+            //     let con = dom.innerHTML
             //     let handled = ''
             //     while(con.indexOf('**')>-1){
             //         let first = con.indexOf('**')
@@ -97,10 +97,10 @@ const markEditor = (html,app)=>{
             //     }
             //     handled+=con
             //     if(handled != dom.innerHTML){
+            //         console.log(handled , dom.innerHTML)
             //         dom.innerHTML = handled;
+            //         app.setCursor(...position)
             //     }
-
-            //     app.setCursor(...position)
             // }
 
             // /* 斜体内容处理 */
