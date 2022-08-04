@@ -50,31 +50,31 @@ const markEditor = (html,app)=>{
             if(dom.innerText.slice(0,2) == '> ') dom.className = 'section reference'
 
             /* 重点内容处理 */
-            if(dom.innerHTML && dom.innerText.indexOf('`')>-1){
-                const position = app.getCursor()
-                let con = dom.innerText
-                let handled = ''
-                while(con.indexOf('`')>-1){
-                    let first = con.indexOf('`')
-                    const pre = con.slice(0,first)
-                    con = con.slice(first+1)
+            // if(dom.innerHTML && dom.innerText.indexOf('`')>-1){
+            //     const position = app.getCursor()
+            //     let con = dom.innerText
+            //     let handled = ''
+            //     while(con.indexOf('`')>-1){
+            //         let first = con.indexOf('`')
+            //         const pre = con.slice(0,first)
+            //         con = con.slice(first+1)
                     
-                    let second = con.indexOf('`')
-                    if(second>-1){
-                        handled += pre+'<span class="ref">`'
-                        handled += con.slice(0,second)+'`</span>'
-                        con = con.slice(second+1)
-                    }else{
-                        handled += pre+(first>-1?'`':'')
-                    }
-                }
-                handled+=con
-                if(handled != dom.innerHTML){
-                    dom.innerHTML = handled;
-                }
+            //         let second = con.indexOf('`')
+            //         if(second>-1){
+            //             handled += pre+'<span class="ref">`'
+            //             handled += con.slice(0,second)+'`</span>'
+            //             con = con.slice(second+1)
+            //         }else{
+            //             handled += pre+(first>-1?'`':'')
+            //         }
+            //     }
+            //     handled+=con
+            //     if(handled != dom.innerHTML){
+            //         dom.innerHTML = handled;
+            //     }
 
-                app.setCursor(...position)
-            }
+            //     app.setCursor(...position)
+            // }
 
             /* 加粗内容处理 */
             // if(dom.innerHTML && dom.innerText.indexOf('**')>-1){

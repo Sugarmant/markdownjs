@@ -93,6 +93,7 @@ class Markdown{
      * @returns 
      */
     render(html){
+        
         if(typeof html == 'string'){
             const box = document.createElement('div')
             html.split('\n').map(v=>{
@@ -102,6 +103,7 @@ class Markdown{
             })
             html = box
         }
+        markEditor(html,this)
         
 
         let children = Array.from(html.cloneNode(true).childNodes)
@@ -122,7 +124,6 @@ class Markdown{
         children.map(v=>{
             temp.append(v)
         })
-        markEditor(html,this)
         return temp.outerHTML
     }
 
