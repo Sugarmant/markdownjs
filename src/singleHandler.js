@@ -60,9 +60,9 @@ export function handleReference(dom){
 
 /* 处理重点内容 */
 export function handleSingleCode(dom){
-    if(dom.innerHTML){
-        if(dom.innerHTML.indexOf('`')>-1 && dom.innerHTML.match(/`/g).length>=2){
-            var con = dom.innerHTML
+    if(dom.innerText){
+        if(dom.innerText.indexOf('`')>-1 && dom.innerText.match(/`/g).length>=2){
+            var con = dom.innerText
             var conLen = con.match(/`/g).length
             for(let i=0;i<Math.floor(conLen/2);i++){
                 con = con.replace(/`/,'<span class="ref">').replace(/`/,'</span>')
@@ -75,9 +75,10 @@ export function handleSingleCode(dom){
 
 /* 处理加粗内容 */
 export function handleBold(dom){
-    if(dom.innerHTML){
-        if(dom.innerHTML.indexOf('**')>-1 && dom.innerHTML.match(/\*\*/g).length>=2){
-            var con = dom.innerHTML
+    if(dom.innerText){
+        let con = dom.innerText
+        if(con.indexOf('**')>-1 && con.match(/\*\*/g).length>=2){
+            
             var conLen = con.match(/\*\*/g).length
             for(let i=0;i<Math.floor(conLen/2);i++){
                 con = con.replace('**','<span class="b">').replace('**','</span>')
@@ -106,10 +107,10 @@ export function handleLink(dom){
 
 /* 处理斜体 */
 export function handleItalic(dom){
-    if(dom.innerHTML){
-        const re = new RegExp(/\*/,'g')
-        if(dom.innerHTML.indexOf('*')>-1 && dom.innerHTML.match(/\*/g).length>=2){
-            var con = dom.innerHTML
+    if(dom.innerText){
+        let con = dom.innerText
+        if(con.indexOf('*')>-1 && con.match(/\*/g).length>=2){
+            
             var conLen = con.match(/\*/g).length
             for(let i=0;i<Math.floor(conLen/2);i++){
                 con = con.replace('*','<span class="i">').replace('*','</span>')

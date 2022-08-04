@@ -39,7 +39,6 @@ class Markdown{
 
         /* 处理键盘事件 */
         entry.addEventListener('keydown',e=>{
-            console.log(e)
             /* 阻止 加粗 斜体 撤回 恢复 事件*/
             if(e.ctrlKey && e.keyCode == 66 || e.keyCode == 73 || e.keyCode == 90 || e.keyCode == 89){
                 e.preventDefault()
@@ -77,6 +76,7 @@ class Markdown{
         entry.addEventListener('mouseup',e=>{
             setTimeout(()=>{
                 this.saveCache()
+                console.log(this.getCursor())
             },10)
         })
         this.saveCache(true)
@@ -102,6 +102,8 @@ class Markdown{
             })
             html = box
         }
+        
+
         let children = Array.from(html.cloneNode(true).childNodes)
         children = handleCode(children)
         children = children.map(dom=>{
@@ -109,7 +111,6 @@ class Markdown{
             dom = handleTitle(dom)
             dom = handleReference(dom)
             dom = handleSingleCode(dom)
-            dom = handleBold(dom)
             dom = handleBold(dom)
             dom = handleLink(dom)
             dom = handleItalic(dom)
@@ -121,7 +122,7 @@ class Markdown{
         children.map(v=>{
             temp.append(v)
         })
-        markEditor(html)
+        markEditor(html,this)
         return temp.outerHTML
     }
 
@@ -146,16 +147,52 @@ class Markdown{
         }
         const range = selection.getRangeAt(0)
         const nodes = Array.from(this.entry.childNodes)
-        const rDom = range.endContainer.parentElement
-        let row,col;
-        col = range.endOffset
+        let rDom;
+        if(range.endContainer instanceof HTMLDivElement && range.endContainer.className.indexOf('section')>-1){
+            rDom = range.endContainer
+        }else{
+            rDom = range.endContainer
+            while(rDom.tagName!='BODY' && (rDom instanceof Text || rDom.className.indexOf('section')==-1)){
+                rDom = rDom.parentElement
+            }
+        }
+
+        let row,col = 0;
         for(let i=0;i<nodes.length;i++){
-            if(rDom == nodes[i]){
+            if(rDom == nodes[i] || rDom.contains(nodes[i])){
                 row = i
                 break;
             }
         }
+        
+        if(nodes[row].childNodes && range.endContainer instanceof Text){
+            col = findColInRow(nodes[row],range)
+        }
         return [row,col]
+    }
+
+    /* 设置光标位置 */
+    setCursor(rowIndex,colIndex){
+        const selection = window.getSelection()
+        if(selection.rangeCount){
+            const r = selection.getRangeAt(0)
+            const row = Array.from(this.entry.childNodes)[rowIndex]
+            const children = Array.from(row.childNodes)
+            let index = 0;
+            for(let i=0;i<children.length;i++){
+                const len = children[i].length || children[i].innerText.length
+                if(index+len<colIndex){
+                    index+=len
+                }else{
+                    const lastIndex = colIndex-index
+                    const dom = children[i] instanceof Text?children[i]:children[i].childNodes[0]
+                    r.setStart(dom,lastIndex)
+                    r.setEnd(dom,lastIndex)
+                    break;
+                }
+            }
+        }
+        
     }
 
     /* 存储编辑缓存 */
@@ -191,9 +228,7 @@ class Markdown{
 
         const cloneEntry = this.entry.cloneNode(true)
         this.lastEdit = cloneEntry.innerHTML
-        const range = window.getSelection().getRangeAt(0)
-        range.setStart(this.entry.childNodes[last.position[0]].childNodes[0],last.position[1]);
-        range.setEnd(this.entry.childNodes[last.position[0]].childNodes[0],last.position[1]);
+        this.setCursor(...last.position)
     }
 
     /* 恢复 */
@@ -208,9 +243,7 @@ class Markdown{
 
         const cloneEntry = this.entry.cloneNode(true)
         this.lastEdit = cloneEntry.innerHTML
-        const range = window.getSelection().getRangeAt(0)
-        range.setStart(this.entry.childNodes[next.position[0]].childNodes[0],next.position[1]);
-        range.setEnd(this.entry.childNodes[next.position[0]].childNodes[0],next.position[1]);
+        this.setCursor(...next.position)
     }
 }
 
@@ -252,5 +285,34 @@ function rangeItalics(r){
         r.setEnd(r.endContainer,end)
     } 
 }
+
+/* 寻找光标所在的列数 */
+function findColInRow(row,range,repeat){
+    let len = 0;
+    for(const item of row.childNodes){
+        if(item instanceof Text){
+            if(range.endContainer == item){
+                len = !repeat?len+=range.endOffset:[len+=range.endOffset]
+                break;
+            }else{
+                len+=item.length
+            }
+        }else{
+            const res = findColInRow(item,range,true)
+            if(typeof res == 'number'){
+                len+=res
+            }else{
+                len+=res[0]
+                break
+            }
+        }
+    }
+    return len
+}
+
+
+
+
+
 
 window['Markdown'] = Markdown

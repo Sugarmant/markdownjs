@@ -68,6 +68,16 @@
   box-sizing: border-box;
   border-left: solid 5px #ccc;
 }
+.__markdown__ .section .ref {
+  color: red;
+  background-color: antiquewhite;
+}
+.__markdown__ .section .b {
+  font-weight: 600;
+}
+.__markdown__ .section .i {
+  font-style: italic;
+}
 .__markdown_result__ {
   color: #333;
   line-height: 26px;
