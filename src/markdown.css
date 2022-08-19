@@ -131,3 +131,9 @@
   font-size: 14px;
   white-space: pre-wrap;
 }
+.__markdown_result__ .imageLink {
+  width: 100%;
+}
+.__markdown_result__ .imageLink img {
+  width: 100%;
+}

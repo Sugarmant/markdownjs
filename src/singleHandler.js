@@ -60,7 +60,7 @@ export function handleReference(dom){
 
 /* 处理重点内容 */
 export function handleSingleCode(dom){
-    if(dom.innerText){
+    if(dom.innerHTML){
         if(dom.innerText.indexOf('`')>-1 && dom.innerText.match(/`/g).length>=2){
             var con = dom.innerText
             var conLen = con.match(/`/g).length
@@ -75,8 +75,8 @@ export function handleSingleCode(dom){
 
 /* 处理加粗内容 */
 export function handleBold(dom){
-    if(dom.innerText){
-        let con = dom.innerText
+    if(dom.innerHTML){
+        let con = dom.innerHTML
         if(con.indexOf('**')>-1 && con.match(/\*\*/g).length>=2){
             
             var conLen = con.match(/\*\*/g).length
@@ -88,6 +88,20 @@ export function handleBold(dom){
         Array.from(dom.childNodes).map(v=>{
             if(v.innerHTML == '' && v.className == 'b')v.outerHTML = "****"
         })
+    }
+    return dom
+}
+
+/* 处理图片链接 */
+export function handleImageLink(dom){
+    if(dom.innerHTML){
+        var content = dom.innerHTML.replace(/^\!\[.*\]\(.*\)/g,function(e){
+            let front = e.match(/\[.*\]/)[0].slice(1).slice(0,-1)
+            let end = e.match(/\(.*\)/)[0].slice(1).slice(0,-1)
+            dom.className = 'imageLink'
+            return `<img src="${end}" alt="${front}" />`
+        })
+        dom.innerHTML = content
     }
     return dom
 }
@@ -107,8 +121,8 @@ export function handleLink(dom){
 
 /* 处理斜体 */
 export function handleItalic(dom){
-    if(dom.innerText){
-        let con = dom.innerText
+    if(dom.innerHTML){
+        let con = dom.innerHTML
         if(con.indexOf('*')>-1 && con.match(/\*/g).length>=2){
             
             var conLen = con.match(/\*/g).length

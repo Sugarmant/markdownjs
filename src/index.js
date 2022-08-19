@@ -7,11 +7,14 @@ import {
     handleReference,
     handleSingleCode,
     handleBold,
+    handleImageLink,
     handleLink,
     handleItalic
 } from './singleHandler'
 
 import markEditor from './markEditor'
+
+import {getCursor,setCursor} from './util'
 
 class Markdown{
     constructor(dom){
@@ -66,13 +69,13 @@ class Markdown{
                 }else if(e.ctrlKey && e.keyCode == 89){
                     this.redo()
                 }else{
-                    this.analysed(this.render(entry))
-                    this.saveCache()
+                    if(e.keyCode != 37 || e.keyCode != 38 || e.keyCode != 39 || e.keyCode != 40){
+                        this.analysed(this.render(entry))
+                        this.saveCache()
+                    }
                 }
-
             },10)
         })
-
         entry.addEventListener('mouseup',e=>{
             setTimeout(()=>{
                 this.saveCache()
@@ -103,7 +106,6 @@ class Markdown{
             html = box
         }
         markEditor(html,this)
-        
 
         let children = Array.from(html.cloneNode(true).childNodes)
         children = handleCode(children)
@@ -113,6 +115,7 @@ class Markdown{
             dom = handleReference(dom)
             dom = handleSingleCode(dom)
             dom = handleBold(dom)
+            dom = handleImageLink(dom)
             dom = handleLink(dom)
             dom = handleItalic(dom)
             return dom
@@ -139,62 +142,6 @@ class Markdown{
         this.saveCache(true)
     }
 
-    /* 获取光标位置 */
-    getCursor(){
-        const selection = document.getSelection()
-        if(selection.rangeCount==0){
-            return []
-        }
-        const range = selection.getRangeAt(0)
-        const nodes = Array.from(this.entry.childNodes)
-        let rDom;
-        if(range.endContainer instanceof HTMLDivElement && range.endContainer.className.indexOf('section')>-1){
-            rDom = range.endContainer
-        }else{
-            rDom = range.endContainer
-            while(rDom.tagName!='BODY' && (rDom instanceof Text || rDom.className.indexOf('section')==-1)){
-                rDom = rDom.parentElement
-            }
-        }
-
-        let row,col = 0;
-        for(let i=0;i<nodes.length;i++){
-            if(rDom == nodes[i] || rDom.contains(nodes[i])){
-                row = i
-                break;
-            }
-        }
-        
-        if(nodes[row].childNodes && range.endContainer instanceof Text){
-            col = findColInRow(nodes[row],range)
-        }
-        return [row,col]
-    }
-
-    /* 设置光标位置 */
-    setCursor(rowIndex,colIndex){
-        const selection = window.getSelection()
-        if(selection.rangeCount){
-            const r = selection.getRangeAt(0)
-            const row = Array.from(this.entry.childNodes)[rowIndex]
-            const children = Array.from(row.childNodes)
-            let index = 0;
-            for(let i=0;i<children.length;i++){
-                const len = children[i].length || children[i].innerText.length
-                if(index+len<colIndex){
-                    index+=len
-                }else{
-                    const lastIndex = colIndex-index
-                    const dom = children[i] instanceof Text?children[i]:children[i].childNodes[0]
-                    r.setStart(dom,lastIndex)
-                    r.setEnd(dom,lastIndex)
-                    break;
-                }
-            }
-        }
-        
-    }
-
     /* 存储编辑缓存 */
     saveCache(init){
         if(init){
@@ -209,11 +156,11 @@ class Markdown{
             }
             this.cache.push({
                 node:cloneEntry,
-                position:this.getCursor()
+                position:getCursor(this.entry)
             })
             this.cacheIndex++
         }else{
-            this.cache[this.cacheIndex]['position'] = this.getCursor()
+            this.cache[this.cacheIndex]['position'] = getCursor(this.entry)
         }
     }
 
@@ -228,7 +175,7 @@ class Markdown{
 
         const cloneEntry = this.entry.cloneNode(true)
         this.lastEdit = cloneEntry.innerHTML
-        this.setCursor(...last.position)
+        setCursor(this.entry,...last.position)
     }
 
     /* 恢复 */
@@ -243,7 +190,7 @@ class Markdown{
 
         const cloneEntry = this.entry.cloneNode(true)
         this.lastEdit = cloneEntry.innerHTML
-        this.setCursor(...next.position)
+        setCursor(this.entry,...next.position)
     }
 }
 
@@ -311,10 +258,5 @@ function findColInRow(row,range,repeat){
     }
     return len
 }
-
-
-
-
-
 
 window['Markdown'] = Markdown
