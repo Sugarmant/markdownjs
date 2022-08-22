@@ -6,7 +6,7 @@ const markEditor = (html,app)=>{
     let changed = false
     for(let i=0;i<children.length;i++){
         let dom = children[i].cloneNode(true)
-        dom.innerHTML = dom.innerText
+        dom.innerText = dom.innerText
         dom.className = 'section'
 
         if(dom.innerText == '') dom.innerHTML = `<br/>`
@@ -22,14 +22,15 @@ const markEditor = (html,app)=>{
                 if(codeDom.innerText.slice(0,3) == '```'){
                     codeDom.className = 'section code end'
                     if(children[e].outerHTML!=codeDom.outerHTML){
-                        children[e].outerHTML = codeDom.outerHTML
+                        children[e].innerHTML = codeDom.innerText
                         changed = true
                     }
+                    
                     break;
                 }else{
                     codeDom.className = 'section code'
                     if(children[e].outerHTML!=codeDom.outerHTML){
-                        children[e].outerHTML = codeDom.outerHTML
+                        children[e].parentNode.replaceChild(codeDom,children[e])
                         changed = true
                     }
                 }
@@ -122,7 +123,8 @@ const markEditor = (html,app)=>{
                 }
             }
             if(children[i].outerHTML!=dom.outerHTML){
-                children[i].outerHTML = dom.outerHTML
+                console.log(dom)
+                children[i].parentNode.replaceChild(dom,children[i])
                 changed = true
             }
         }
