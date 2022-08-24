@@ -19,7 +19,9 @@ export function getCursor(dom){
             if(offset == 0) offset+=.1
             return [true,offset]
         } 
-        if(node instanceof Text) return [false,node.length]
+        if(node instanceof Text) {
+            return [false,node.length]
+        }
         let len = 0
         for(let item of node.childNodes){
             const result = countLength(item,targetNode,offset)
@@ -36,7 +38,6 @@ export function getCursor(dom){
 
 /* 设置光标位置 */
 export function setCursor(dom,start,end){
-    console.log('设置光标')
     const selection = window.getSelection()
     if(selection.rangeCount==0){
         throw new Error('No range found')

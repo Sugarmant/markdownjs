@@ -1,7 +1,5 @@
-import './prism/prism.js'
-
 /* 处理code */
-export function handleCode(children){
+export function handleCodes(children){
     let list = []
 
     /* 处理code */

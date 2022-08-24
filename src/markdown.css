@@ -1,11 +1,14 @@
 .__markdown__ {
   color: #333;
+  white-space: pre-wrap;
+  display: block;
 }
 .__markdown__ .section {
   width: 100%;
   line-height: 26px;
   min-height: 26px;
-  white-space: normal;
+  white-space: pre-wrap;
+  display: inline-block;
 }
 .__markdown__ .section.code {
   background-color: #f0f0f0;
@@ -68,14 +71,23 @@
   box-sizing: border-box;
   border-left: solid 5px #ccc;
 }
-.__markdown__ .section .ref {
+.__markdown__ .code {
+  line-height: 22px;
+  display: inline-block;
+  padding: 10px;
+  box-sizing: border-box;
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 14px;
+  white-space: pre-wrap;
+}
+.__markdown__ .ref {
   color: red;
   background-color: antiquewhite;
 }
-.__markdown__ .section .b {
+.__markdown__ .b {
   font-weight: 600;
 }
-.__markdown__ .section .i {
+.__markdown__ .i {
   font-style: italic;
 }
 .__markdown_result__ {

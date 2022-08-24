@@ -1,6 +1,6 @@
+import './prism/prism.js'
 import './prism/prism.css'
 import './markdown.css'
-import {handleCode} from './wholeHandler'
 import {
     handleSplitLine,
     handleTitle,
@@ -9,8 +9,10 @@ import {
     handleBold,
     handleImageLink,
     handleLink,
-    handleItalic
+    handleItalic,
 } from './singleHandler'
+
+import {handleCodes} from './wholeHandler'
 
 import markEditor from './markEditor'
 
@@ -27,7 +29,7 @@ class Markdown{
         var entry = this.entry
         entry.setAttribute('contenteditable','true')
         entry.className= 'editor __markdown__'
-        entry.innerHTML = '<div class="section"></div>'
+        entry.innerHTML = ''
         entry.focus()
         /* 处理复制过来的内容 */
         entry.addEventListener('paste',function(e){
@@ -43,17 +45,18 @@ class Markdown{
         /* 处理键盘事件 */
         entry.addEventListener('keydown',e=>{
             /* 阻止 加粗 斜体 撤回 恢复 事件*/
-            if(e.ctrlKey && e.keyCode == 66 || e.keyCode == 73 || e.keyCode == 90 || e.keyCode == 89){
+            if(e.ctrlKey && (e.keyCode == 66 || e.keyCode == 73 || e.keyCode == 90 || e.keyCode == 89)){
                 e.preventDefault()
             }
+            if(e.keyCode == 13) e.preventDefault()
 
             setTimeout(()=>{
                 let range = window.getSelection().getRangeAt(0)
-                /* 防止删除留底dom */
-                if(e.keyCode == 8){
-                    if(entry.querySelectorAll('.section').length == 0){
-                        entry.innerHTML = '<div class="section"></div>'
-                    }
+
+                if(e.keyCode == 13){
+                    const position = getCursor(entry)
+                    range.insertNode(new Text('\n'))
+                    setCursor(entry,...[position[0]+1,position[1]+1])
                 }
 
                 if(e.ctrlKey){
@@ -69,11 +72,13 @@ class Markdown{
                 }else if(e.ctrlKey && e.keyCode == 89){
                     this.redo()
                 }else{
-                    if(e.keyCode != 37 || e.keyCode != 38 || e.keyCode != 39 || e.keyCode != 40){
-                        this.analysed(this.render(entry))
+                    if(e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40){
+                        
+                        this.renderEditor(entry.innerText)
                         this.saveCache()
                     }
                 }
+                this.analysed(this.render(entry.innerText))
             },10)
         })
         entry.addEventListener('mouseup',e=>{
@@ -95,20 +100,18 @@ class Markdown{
      * @returns 
      */
     render(html){
-        
         if(typeof html == 'string'){
             const box = document.createElement('div')
             html.split('\n').map(v=>{
-                const d = document.createElement('div')
-                d.innerText = v
-                box.append(d)
+                const p = document.createElement('div')
+                p.innerText = v
+                box.append(p)
             })
             html = box
         }
-        markEditor(html,this)
-
+        
         let children = Array.from(html.cloneNode(true).childNodes)
-        children = handleCode(children)
+        children = handleCodes(children)
         children = children.map(dom=>{
             dom = handleSplitLine(dom)
             dom = handleTitle(dom)
@@ -129,17 +132,28 @@ class Markdown{
         return temp.outerHTML
     }
 
+    renderEditor(html){
+        const position = getCursor(this.entry)
+        let dom = document.createElement('div')
+        if(typeof html == 'string'){
+            // html.split('\n').map(v=>{
+            //     const p = document.createElement('span')
+            //     p.innerText = v
+            //     dom.append(p)
+            // })
+            this.entry.innerHTML = markEditor(html)
+            setCursor(this.entry,...position)
+            return
+        }
+        this.entry.innerHTML = markEditor(dom)
+        setCursor(this.entry,...position)
+    }
+
     /* 设置样例 */
     setExmple(text){
-        const box = document.createElement('div')
-        text.split('\n').map(v=>{
-            const d = document.createElement('div')
-            d.innerText = v
-            box.append(d)
-        })
-        this.entry.innerHTML = box.innerHTML
-        this.analysed(this.render(this.entry))
+        this.analysed(this.render(text))
         this.saveCache(true)
+        this.renderEditor(text)
     }
 
     /* 存储编辑缓存 */
@@ -147,6 +161,7 @@ class Markdown{
         if(init){
             this.cacheIndex = -1
             this.cache = []
+            this.lastEdit = this.entry.cloneNode(true)
         }
         const cloneEntry = this.entry.cloneNode(true)
         if(this.lastEdit != cloneEntry.innerHTML){

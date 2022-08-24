@@ -137,3 +137,19 @@ export function handleItalic(dom){
     }
     return dom
 }
+
+/* 处理代码 */
+// export function handleCode(dom){
+//     let language = dom.childNodes[0].innerText.slice(3).replace(' ','').replace('\n','').replace('\r','')
+//     const children = Array.from(dom.childNodes)
+//     let preHTML = ''
+//     children.map((v,k)=>{
+//         preHTML+=v.innerText.replace(/\n/,'')+'\n';
+//     })
+//     preHTML = preHTML.replace(/\n(?![\s\S]*\n)/,'')
+//     let codeBox = document.createElement('code')
+//     if(!Prism.languages[language]) language = 'jsx'
+//     const html = Prism.highlight(preHTML, Prism.languages[language.replace('\r','')],language);
+//     codeBox.innerHTML = html
+//     return codeBox
+// }

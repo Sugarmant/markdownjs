@@ -1,60 +1,48 @@
 
-// import { handleCode } from './singleHandler'
+import { handleCode } from './singleHandler'
 
 const markEditor = (html,app)=>{
-
-    const strs = html.split('\n')
-
-    for(let i=0;i<strs.length;i++){
-        strs[i] = strs[i].replace(/</g,'&lt')
-        .replace(/>/g,'&gt')
-        let v = strs[i]
-        
-        if(v.slice(0,3) == '```'){
-            let box = ''
-            box+=v+'\n'
-            delete strs[i]
-            for(let e=i+1;e<strs.length;e++){
-                let vv = strs[e]
-                if(vv.slice(0,3) == '```'){
-                    box+=vv+'\n'
+    const children = html.childNodes
+    for(let i=0;i<children.length;i++){
+        let dom = children[i].cloneNode(true)
+        dom.className = 'section'
+        if(dom.innerHTML.slice(0,3) == '```'){
+            const box = document.createElement('div')
+            box.className = 'code'
+            children[i].parentNode.insertBefore(box,children[i])
+            box.append(dom)
+            children[i+1].remove()
+            for(let e=i+1;e<children.length;e){
+                let codeDom = children[e]
+                if(codeDom.innerText.slice(0,3) == '```'){
+                    box.append(children[e])
                     break;
                 }else{
-                    box+=vv+'\n'
+                    box.append(children[e])
                 }
-                i=e
-                delete strs[i]
             }
-            box = box.replace(/\n(?![\s\S]*\n)/,'')
-            i++
-            delete strs[i]
-            let language = box.split('\n')[0].slice(3).replace(' ','').replace('\n','').replace('\r','')
-            let codeBox = document.createElement('span')
-            codeBox.className = 'code'
-            if(!Prism.languages[language]) language = 'jsx'
-            const html = Prism.highlight(box, Prism.languages[language.replace('\r','')],language);
-            codeBox.innerHTML = html
-            strs[i] = codeBox.outerHTML
+            box.outerHTML = handleCode(box.cloneNode(true)).outerHTML
         }else{
-
-            if(v.slice(0,7) == '###### ') v = '<span class="section h6">'+v+'</span>'
-            if(v.slice(0,6) == '##### ') v = '<span class="section h5">'+v+'</span>'
-            if(v.slice(0,5) == '#### ') v = '<span class="section h4">'+v+'</span>'
-            if(v.slice(0,4) == '### ') v = '<span class="section h3">'+v+'</span>'
-            if(v.slice(0,3) == '## ') v = '<span class="section h2">'+v+'</span>'
-            if(v.slice(0,2) == '# ') v = '<span class="section h1">'+v+'</span>'
+            /* 标题处理 */
+            if(dom.innerHTML.slice(0,7) == '###### ') dom.className = 'section h6'
+            if(dom.innerHTML.slice(0,6) == '##### ') dom.className = 'section h5'
+            if(dom.innerHTML.slice(0,5) == '#### ') dom.className = 'section h4'
+            if(dom.innerHTML.slice(0,4) == '### ') dom.className = 'section h3'
+            if(dom.innerHTML.slice(0,3) == '## ') dom.className = 'section h2'
+            if(dom.innerHTML.slice(0,2) == '# ') dom.className = 'section h1'
 
             /* 引用内容处理 */
-            if(v.slice(0,2) == '> ') v = '<span class="section reference">'+v+'</span>'
+            if(dom.innerText.slice(0,2) == '> ') dom.className = 'section reference'
 
             /* 重点内容处理 */
-            if(v && v.indexOf('`')>-1){
-                let con = v
+            if(dom.innerHTML && dom.innerText.indexOf('`')>-1){
+                let con = dom.innerHTML
                 let handled = ''
                 while(con.indexOf('`')>-1){
                     let first = con.indexOf('`')
                     const pre = con.slice(0,first)
                     con = con.slice(first+1)
+                    
                     let second = con.indexOf('`')
                     if(second>-1 && pre[pre.length-1]!='>'){
                         handled += pre+'<span class="ref">`'
@@ -66,14 +54,14 @@ const markEditor = (html,app)=>{
                     }
                 }
                 handled+=con
-                if(handled != v){
-                    v = handled;
+                if(handled != dom.innerHTML){
+                    dom.innerHTML = handled;
                 }
             }
 
             /* 加粗内容处理 */
-            if(v && v.indexOf('**')>-1){
-                let con = v
+            if(dom.innerHTML && dom.innerText.indexOf('**')>-1){
+                let con = dom.innerHTML
                 let handled = ''
                 while(con.indexOf('**')>-1){
                     let first = con.indexOf('**')
@@ -90,20 +78,20 @@ const markEditor = (html,app)=>{
                     }
                 }
                 handled+=con
-                if(handled != v){
-                    v = handled;
+                if(handled != dom.innerHTML){
+                    dom.innerHTML = handled;
                 }
             }
 
             // /* 斜体内容处理 */
-            if(v && v.indexOf('*')>-1){
-                let con = v
+            if(dom.innerHTML && dom.innerText.indexOf('*')>-1){
+                let con = dom.innerHTML
                 let handled = ''
                 while(con.indexOf('*')>-1 && con[con.indexOf('*')+1]!='*' && con[con.indexOf('*')-1] !='>'){
                     let first = con.indexOf('*')
                     const pre = con.slice(0,first)
                     con = con.slice(first+1)
-
+                    
                     let second = con.indexOf('*')
                     if(second>-1 && pre[pre.length-1]!='>'){
                         handled += pre+'<span class="i">*'
@@ -114,18 +102,16 @@ const markEditor = (html,app)=>{
                     }
                 }
                 handled+=con
-                if(handled != v){
-                    v = handled;
+                if(handled != dom.innerHTML){
+                    dom.innerHTML = handled;
                 }
             }
-            strs[i] = v
+            if(children[i].outerHTML!=dom.outerHTML){
+                children[i].parentNode.replaceChild(dom,children[i])
+            }
         }
     }
-    let newArr = []
-    strs.map(v=>{
-        newArr.push(v)
-    })
-    return newArr.join('\n')
+    return html.innerHTML
 }
 
 export default markEditor
