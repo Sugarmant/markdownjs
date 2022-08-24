@@ -6,8 +6,8 @@ const markEditor = (html,app)=>{
     const strs = html.split('\n')
 
     for(let i=0;i<strs.length;i++){
-        strs[i] = strs[i].replace(/</g,'&lt')
-        .replace(/>/g,'&gt')
+        strs[i] = strs[i].replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
         let v = strs[i]
         
         if(v.slice(0,3) == '```'){
@@ -45,7 +45,7 @@ const markEditor = (html,app)=>{
             if(v.slice(0,2) == '# ') v = '<span class="section h1">'+v+'</span>'
 
             /* 引用内容处理 */
-            if(v.slice(0,2) == '> ') v = '<span class="section reference">'+v+'</span>'
+            if(v.slice(0,5) == '&gt; ') v = '<span class="section reference">'+v+'</span>'
 
             /* 重点内容处理 */
             if(v && v.indexOf('`')>-1){
