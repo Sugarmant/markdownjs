@@ -1,7 +1,4 @@
-
-// import { handleCode } from './singleHandler'
-
-const markEditor = (html,app)=>{
+const handleEditor = (html,app)=>{
 
     const strs = html.split('\n')
 
@@ -43,6 +40,9 @@ const markEditor = (html,app)=>{
             if(v.slice(0,4) == '### ') v = '<span class="section h3">'+v+'</span>'
             if(v.slice(0,3) == '## ') v = '<span class="section h2">'+v+'</span>'
             if(v.slice(0,2) == '# ') v = '<span class="section h1">'+v+'</span>'
+
+            /* 处理列表 */
+            if(v.slice(0,2) == '- ') v = '<span class="section li">'+v+'</span>'
 
             /* 引用内容处理 */
             if(v.slice(0,5) == '&gt; ') v = '<span class="section reference">'+v+'</span>'
@@ -128,4 +128,4 @@ const markEditor = (html,app)=>{
     return newArr.join('\n')
 }
 
-export default markEditor
+export default handleEditor

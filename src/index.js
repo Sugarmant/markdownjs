@@ -1,20 +1,10 @@
 import './prism/prism.js'
 import './prism/prism.css'
 import './markdown.css'
-import {
-    handleSplitLine,
-    handleTitle,
-    handleReference,
-    handleSingleCode,
-    handleBold,
-    handleImageLink,
-    handleLink,
-    handleItalic,
-} from './singleHandler'
 
-import {handleCodes} from './wholeHandler'
+import handleEditor from './handleEditor'
 
-import markEditor from './markEditor'
+import handleView from './handleView'
 
 import {getCursor,setCursor} from './util'
 
@@ -72,13 +62,12 @@ class Markdown{
                 }else if(e.ctrlKey && e.keyCode == 89){
                     this.redo()
                 }else{
-                    if(e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40){
-                        
+                    if(e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40 && e.key!='Process'){
                         this.renderEditor(entry.innerText)
                         this.saveCache()
                     }
                 }
-                this.analysed(this.render(entry.innerText))
+                this.analysed(this.renderView(entry.innerText))
             },10)
         })
         entry.addEventListener('mouseup',e=>{
@@ -86,7 +75,6 @@ class Markdown{
                 this.saveCache()
             },10)
         })
-        this.saveCache(true)
     }
 
     /* 被动解析 */
@@ -94,66 +82,24 @@ class Markdown{
         this.analysed = fun
     }
 
-    /**
-     * 渲染markdown
-     * @param {Node | Text} html 被渲染的值
-     * @returns 
-     */
-    render(html){
-        if(typeof html == 'string'){
-            const box = document.createElement('div')
-            html.split('\n').map(v=>{
-                const p = document.createElement('div')
-                p.innerText = v
-                box.append(p)
-            })
-            html = box
-        }
-        
-        let children = Array.from(html.cloneNode(true).childNodes)
-        children = handleCodes(children)
-        children = children.map(dom=>{
-            dom = handleSplitLine(dom)
-            dom = handleTitle(dom)
-            dom = handleReference(dom)
-            dom = handleSingleCode(dom)
-            dom = handleBold(dom)
-            dom = handleImageLink(dom)
-            dom = handleLink(dom)
-            dom = handleItalic(dom)
-            return dom
-        })
-
+    renderView(html){
         var temp = document.createElement('div')
         temp.className = "__markdown_result__"
-        children.map(v=>{
-            temp.append(v)
-        })
+        temp.innerHTML = handleView(html)
         return temp.outerHTML
     }
 
     renderEditor(html){
         const position = getCursor(this.entry)
-        let dom = document.createElement('div')
-        if(typeof html == 'string'){
-            // html.split('\n').map(v=>{
-            //     const p = document.createElement('span')
-            //     p.innerText = v
-            //     dom.append(p)
-            // })
-            this.entry.innerHTML = markEditor(html)
-            setCursor(this.entry,...position)
-            return
-        }
-        this.entry.innerHTML = markEditor(dom)
+        this.entry.innerHTML = handleEditor(html)
         setCursor(this.entry,...position)
     }
 
     /* 设置样例 */
     setExmple(text){
-        this.analysed(this.render(text))
-        this.saveCache(true)
+        this.analysed(this.renderView(text))
         this.renderEditor(text)
+        this.saveCache(true)
     }
 
     /* 存储编辑缓存 */
@@ -186,7 +132,7 @@ class Markdown{
         this.cacheIndex--
         const last = this.cache[this.cacheIndex]
         this.entry.innerHTML = last.node.innerHTML
-        this.analysed(this.render(last.node))
+        this.analysed(this.renderView(last.node.innerText))
 
         const cloneEntry = this.entry.cloneNode(true)
         this.lastEdit = cloneEntry.innerHTML
@@ -195,13 +141,12 @@ class Markdown{
 
     /* 恢复 */
     redo(){
-        console.log(this.cacheIndex, this.cache.length)
         if(this.cacheIndex == this.cache.length-1) return
         
         this.cacheIndex++
         const next = this.cache[this.cacheIndex]
         this.entry.innerHTML = next.node.innerHTML
-        this.analysed(this.render(next.node))
+        this.analysed(this.renderView(next.node.innerText))
 
         const cloneEntry = this.entry.cloneNode(true)
         this.lastEdit = cloneEntry.innerHTML
@@ -248,30 +193,6 @@ function rangeItalics(r){
         r.setStart(r.startContainer,start+1)
         r.setEnd(r.endContainer,end)
     } 
-}
-
-/* 寻找光标所在的列数 */
-function findColInRow(row,range,repeat){
-    let len = 0;
-    for(const item of row.childNodes){
-        if(item instanceof Text){
-            if(range.endContainer == item){
-                len = !repeat?len+=range.endOffset:[len+=range.endOffset]
-                break;
-            }else{
-                len+=item.length
-            }
-        }else{
-            const res = findColInRow(item,range,true)
-            if(typeof res == 'number'){
-                len+=res
-            }else{
-                len+=res[0]
-                break
-            }
-        }
-    }
-    return len
 }
 
 window['Markdown'] = Markdown

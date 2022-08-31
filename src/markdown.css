@@ -132,6 +132,23 @@
 .__markdown_result__ .i {
   font-style: italic;
 }
+.__markdown_result__ .li {
+  padding-left: 30px;
+  position: relative;
+}
+.__markdown_result__ .li::before {
+  line-height: 26px;
+  content: ' ';
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 2.5px;
+  background-color: #000;
+  margin-right: 7px;
+  position: absolute;
+  left: 13px;
+  top: 13px;
+}
 .__markdown_result__ code {
   line-height: 22px;
   display: block;
