@@ -33,12 +33,12 @@ const handleEditor = (html)=>{
             strs[i] = codeBox.outerHTML
         }else{
 
-            if(v.slice(0,7) == '###### ') v = '<span class="h6"><span class="plain">###### </span>'+v.slice(7,v.length)+'</span>'
-            if(v.slice(0,6) == '##### ') v = '<span class="h5"><span class="plain">##### </span>'+v.slice(6,v.length)+'</span>'
-            if(v.slice(0,5) == '#### ') v = '<span class="h4"><span class="plain">#### </span>'+v.slice(5,v.length)+'</span>'
-            if(v.slice(0,4) == '### ') v = '<span class="h3"><span class="plain">### </span>'+v.slice(4,v.length)+'</span>'
-            if(v.slice(0,3) == '## ') v = '<span class="h2"><span class="plain">## </span>'+v.slice(3,v.length)+'</span>'
-            if(v.slice(0,2) == '# ') v = '<span class="h1"><span class="plain"># </span>'+v.slice(2,v.length)+'</span>'
+            if(v.slice(0,7) == '###### ') v = '<h6><span class="plain">###### </span>'+v.slice(7,v.length)+'</h6>'
+            if(v.slice(0,6) == '##### ') v = '<h5><span class="plain">##### </span>'+v.slice(6,v.length)+'</h5>'
+            if(v.slice(0,5) == '#### ') v = '<h4><span class="plain">#### </span>'+v.slice(5,v.length)+'</h4>'
+            if(v.slice(0,4) == '### ') v = '<h3><span class="plain">### </span>'+v.slice(4,v.length)+'</h3>'
+            if(v.slice(0,3) == '## ') v = '<h2><span class="plain">## </span>'+v.slice(3,v.length)+'</h2>'
+            if(v.slice(0,2) == '# ') v = '<h1><span class="plain"># </span>'+v.slice(2,v.length)+'</h1>'
 
             /* 处理无序列表 */
             if(v.slice(0,2) == '- ') v = '<span class="section li">'+v+'</span>'
@@ -47,7 +47,7 @@ const handleEditor = (html)=>{
             if(v == '***') v = '<span class="splitLine">***</span>'
 
             /* 引用内容处理 */
-            if(v.slice(0,5) == '&gt; ') v = '<span class="blockquote">'+v+'</span>'
+            if(v.slice(0,5) == '&gt; ') v = '<blockquote>'+v+'</blockquote>'
 
             /* 处理图片 */
             v = v.replace(/\!\[.*\]\(.*\)/g,function(e){
@@ -98,8 +98,8 @@ const handleEditor = (html)=>{
                     
                     let second = con.indexOf('**')
                     if(second>-1 && pre[pre.length-1]!='>'){
-                        handled += pre+'<span class="b">**'
-                        handled += con.slice(0,second)+'**</span>'
+                        handled += pre+'<strong>**'
+                        handled += con.slice(0,second)+'**</strong>'
                         con = con.slice(second+2)
                     }else{
                         handled += pre+(first>-2?'**':'')
@@ -122,8 +122,8 @@ const handleEditor = (html)=>{
 
                     let second = con.indexOf('*')
                     if(second>-1 && pre[pre.length-1]!='>'){
-                        handled += pre+'<span class="i">*'
-                        handled += con.slice(0,second)+'*</span>'
+                        handled += pre+'<i>*'
+                        handled += con.slice(0,second)+'*</i>'
                         con = con.slice(second+1)
                     }else{
                         handled += pre+(first>-1?'*':'')
