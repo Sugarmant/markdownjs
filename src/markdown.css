@@ -1,7 +1,56 @@
 .__markdown__ {
-  color: #333;
+  color: #4d4d4d;
   white-space: pre-wrap;
   display: block;
+  line-height: 26px;
+}
+.__markdown__ .blockquote {
+  width: 100%;
+  background-color: #eef0f4;
+  font-size: 14px;
+  color: #333;
+  padding: 16px;
+  box-sizing: border-box;
+  border-left: 8px solid #dddfe4;
+  display: inline-block;
+  margin: 0;
+  margin-bottom: 15px;
+}
+.__markdown__ .h1 {
+  font-weight: normal;
+  font-size: 24px;
+  color: #4f4f4f;
+  margin: 8px 0 16px;
+}
+.__markdown__ .h2 {
+  font-weight: normal;
+  font-size: 22px;
+  color: #4f4f4f;
+  margin: 8px 0 16px;
+}
+.__markdown__ .h3 {
+  font-weight: normal;
+  font-size: 20px;
+  color: #4f4f4f;
+  margin: 8px 0 16px;
+}
+.__markdown__ .h4 {
+  font-weight: normal;
+  font-size: 18px;
+  color: #4f4f4f;
+  margin: 8px 0 16px;
+}
+.__markdown__ .h5 {
+  font-weight: normal;
+  font-size: 16px;
+  color: #4f4f4f;
+  margin: 8px 0 16px;
+}
+.__markdown__ .h6 {
+  font-weight: normal;
+  font-size: 16px;
+  color: #4f4f4f;
+  margin: 8px 0 16px;
 }
 .__markdown__ .section {
   width: 100%;
@@ -17,45 +66,6 @@
   font-size: 14px;
   line-height: 22px;
   min-height: auto;
-}
-.__markdown__ .section.h1 {
-  font-size: 2em;
-  font-weight: bold;
-  margin-block-start: 0.67em;
-  margin-block-end: 0.67em;
-  margin-top: 35px;
-}
-.__markdown__ .section.h2 {
-  font-size: 1.5em;
-  font-weight: bold;
-  margin-block-start: 0.67em;
-  margin-block-end: 0.67em;
-  border-bottom: solid 1px #ececec;
-  padding-bottom: 12px;
-  margin-top: 35px;
-}
-.__markdown__ .section.h3 {
-  font-size: 1.17em;
-  font-weight: bold;
-  margin-block-start: 0.67em;
-  margin-block-end: 0.67em;
-}
-.__markdown__ .section.h4 {
-  font-weight: bold;
-  margin-block-start: 0.67em;
-  margin-block-end: 0.67em;
-}
-.__markdown__ .section.h5 {
-  font-size: 0.83em;
-  font-weight: bold;
-  margin-block-start: 0.67em;
-  margin-block-end: 0.67em;
-}
-.__markdown__ .section.h6 {
-  font-size: 0.67em;
-  font-weight: bold;
-  margin-block-start: 0.67em;
-  margin-block-end: 0.67em;
 }
 .__markdown__ .section.code.start {
   margin-top: 1em;
@@ -81,8 +91,8 @@
   white-space: pre-wrap;
 }
 .__markdown__ .ref {
-  color: red;
-  background-color: antiquewhite;
+  background-color: rgba(0, 0, 0, 0.05);
+  font-size: 14px;
 }
 .__markdown__ .b {
   font-weight: 600;
@@ -91,31 +101,62 @@
   font-style: italic;
 }
 .__markdown_result__ {
-  color: #333;
+  color: #4d4d4d;
   line-height: 26px;
+}
+.__markdown_result__ blockquote {
+  width: 100%;
+  background-color: #eef0f4;
+  font-size: 14px;
+  color: #333;
+  padding: 16px;
+  box-sizing: border-box;
+  border-left: 8px solid #dddfe4;
+  display: inline-block;
+  margin: 0;
+  margin-bottom: 15px;
 }
 .__markdown_result__ h1 {
-  margin-top: 35px;
+  font-weight: normal;
+  font-size: 24px;
+  color: #4f4f4f;
+  margin: 8px 0 16px;
 }
 .__markdown_result__ h2 {
-  border-bottom: solid 1px #ececec;
-  padding-bottom: 12px;
-  margin-top: 35px;
+  font-weight: normal;
+  font-size: 22px;
+  color: #4f4f4f;
+  margin: 8px 0 16px;
 }
 .__markdown_result__ h3 {
-  font-size: 1.17em;
-  font-weight: bold;
-  margin-block-start: 0.67em;
-  margin-block-end: 0.67em;
+  font-weight: normal;
+  font-size: 20px;
+  color: #4f4f4f;
+  margin: 8px 0 16px;
 }
-.__markdown_result__ .reference {
-  background-color: #f0f0f0;
-  font-size: 14px;
-  color: #666;
-  padding: 5px 10px;
-  box-sizing: border-box;
-  border-left: solid 5px #ccc;
-  line-height: 26px;
+.__markdown_result__ h4 {
+  font-weight: normal;
+  font-size: 18px;
+  color: #4f4f4f;
+  margin: 8px 0 16px;
+}
+.__markdown_result__ h5 {
+  font-weight: normal;
+  font-size: 16px;
+  color: #4f4f4f;
+  margin: 8px 0 16px;
+}
+.__markdown_result__ h6 {
+  font-weight: normal;
+  font-size: 16px;
+  color: #4f4f4f;
+  margin: 8px 0 16px;
+}
+.__markdown_result__ p {
+  margin: 0;
+}
+.__markdown_result__ p.li {
+  min-height: 26px;
 }
 .__markdown_result__ .splitLine {
   border-bottom: solid 1.5px #eee;
@@ -125,12 +166,6 @@
   color: red;
   background-color: antiquewhite;
   padding: 0 5px;
-}
-.__markdown_result__ .b {
-  font-weight: 600;
-}
-.__markdown_result__ .i {
-  font-style: italic;
 }
 .__markdown_result__ .li {
   padding-left: 30px;

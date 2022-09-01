@@ -45,7 +45,7 @@ const handleView = (html,app)=>{
             if(v.slice(0,2) == '- ') v = '<p class="li">'+v.slice(2,v.length)+'</p>'
 
             /* 引用内容处理 */
-            if(v.slice(0,5) == '&gt; ') v = '<p class="section reference">'+v+'</p>'
+            if(v.slice(0,5) == '&gt; ') v = '<blockquote>'+v.slice(5,v.length)+'</blockquote>'
 
             /* 处理分割线 */
             if(v == '***') v = '<div class="splitLine"></div>'
@@ -76,11 +76,10 @@ const handleView = (html,app)=>{
                     con = con.slice(first+1)
                     let second = con.indexOf('`')
                     if(second>-1 && pre[pre.length-1]!='>'){
-                        handled += pre+'<span class="ref">`'
-                        handled += con.slice(0,second)+'`</span>'
+                        handled += pre+'<span class="ref">'
+                        handled += con.slice(0,second)+'</span>'
                         con = con.slice(second+1)
                     }else{
-                        
                         handled += pre+(first>-1?'`':'')
                     }
                 }
@@ -101,8 +100,8 @@ const handleView = (html,app)=>{
                     
                     let second = con.indexOf('**')
                     if(second>-1 && pre[pre.length-1]!='>'){
-                        handled += pre+'<span class="b">**'
-                        handled += con.slice(0,second)+'**</span>'
+                        handled += pre+'<strong>'
+                        handled += con.slice(0,second)+'</strong>'
                         con = con.slice(second+2)
                     }else{
                         handled += pre+(first>-2?'**':'')
@@ -114,7 +113,7 @@ const handleView = (html,app)=>{
                 }
             }
 
-            // /* 斜体内容处理 */
+            /* 斜体内容处理 */
             if(v && v.indexOf('*')>-1){
                 let con = v
                 let handled = ''
@@ -125,8 +124,8 @@ const handleView = (html,app)=>{
 
                     let second = con.indexOf('*')
                     if(second>-1 && pre[pre.length-1]!='>'){
-                        handled += pre+'<span class="i">*'
-                        handled += con.slice(0,second)+'*</span>'
+                        handled += pre+'<i>'
+                        handled += con.slice(0,second)+'</i>'
                         con = con.slice(second+1)
                     }else{
                         handled += pre+(first>-1?'*':'')
