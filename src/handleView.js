@@ -1,4 +1,4 @@
-const handleView = (html,app)=>{
+const handleView = (html)=>{
 
     const strs = html.split('\n')
 
@@ -63,8 +63,6 @@ const handleView = (html,app)=>{
                 let end = e.match(/\(.*\)/)[0].slice(1).slice(0,-1)
                 return '<a href="'+end+'">'+front+'</a>'
             })
-
-            
 
             /* 重点内容处理 */
             if(v && v.indexOf('`')>-1){
@@ -143,9 +141,7 @@ const handleView = (html,app)=>{
         }
     }
     let newArr = []
-    strs.map(v=>{
-        newArr.push(v)
-    })
+    strs.map(v=>newArr.push(v))
     return newArr.join('\n')
 }
 

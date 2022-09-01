@@ -17,40 +17,59 @@
   margin-bottom: 15px;
 }
 .__markdown__ .h1 {
+  display: inline-block;
   font-weight: normal;
   font-size: 24px;
   color: #4f4f4f;
   margin: 8px 0 16px;
 }
 .__markdown__ .h2 {
+  display: inline-block;
   font-weight: normal;
   font-size: 22px;
   color: #4f4f4f;
   margin: 8px 0 16px;
 }
 .__markdown__ .h3 {
+  display: inline-block;
   font-weight: normal;
   font-size: 20px;
   color: #4f4f4f;
   margin: 8px 0 16px;
 }
 .__markdown__ .h4 {
+  display: inline-block;
   font-weight: normal;
   font-size: 18px;
   color: #4f4f4f;
   margin: 8px 0 16px;
 }
 .__markdown__ .h5 {
+  display: inline-block;
   font-weight: normal;
   font-size: 16px;
   color: #4f4f4f;
   margin: 8px 0 16px;
 }
 .__markdown__ .h6 {
+  display: inline-block;
   font-weight: normal;
   font-size: 16px;
   color: #4f4f4f;
   margin: 8px 0 16px;
+}
+.__markdown__ .plain {
+  color: rgba(54, 30, 30, 0.28);
+}
+.__markdown__ .splitLine {
+  color: #999;
+}
+.__markdown__ .img {
+  display: inline;
+}
+.__markdown__ .img .text {
+  width: 100%;
+  display: inline-block;
 }
 .__markdown__ .section {
   width: 100%;
@@ -82,13 +101,16 @@
   border-left: solid 5px #ccc;
 }
 .__markdown__ .code {
+  color: #eee;
+  width: 100%;
+  background-color: #1E1E1E;
   line-height: 22px;
-  display: inline-block;
   padding: 10px;
   box-sizing: border-box;
   font-family: Consolas, 'Courier New', monospace;
   font-size: 14px;
   white-space: pre-wrap;
+  display: inline-block;
 }
 .__markdown__ .ref {
   background-color: rgba(0, 0, 0, 0.05);
@@ -154,8 +176,6 @@
 }
 .__markdown_result__ p {
   margin: 0;
-}
-.__markdown_result__ p.li {
   min-height: 26px;
 }
 .__markdown_result__ .splitLine {
@@ -163,9 +183,10 @@
   margin: 10px 0;
 }
 .__markdown_result__ .ref {
-  color: red;
+  color: #c7254e;
   background-color: antiquewhite;
   padding: 0 5px;
+  font-size: 14px;
 }
 .__markdown_result__ .li {
   padding-left: 30px;
@@ -183,6 +204,10 @@
   position: absolute;
   left: 13px;
   top: 13px;
+}
+.__markdown_result__ a {
+  color: #4ea1db;
+  text-decoration: none;
 }
 .__markdown_result__ code {
   line-height: 22px;

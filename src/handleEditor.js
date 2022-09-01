@@ -1,4 +1,4 @@
-const handleEditor = (html,app)=>{
+const handleEditor = (html)=>{
 
     const strs = html.split('\n')
 
@@ -33,18 +33,35 @@ const handleEditor = (html,app)=>{
             strs[i] = codeBox.outerHTML
         }else{
 
-            if(v.slice(0,7) == '###### ') v = '<span class="section h6">'+v+'</span>'
-            if(v.slice(0,6) == '##### ') v = '<span class="section h5">'+v+'</span>'
-            if(v.slice(0,5) == '#### ') v = '<span class="section h4">'+v+'</span>'
-            if(v.slice(0,4) == '### ') v = '<span class="section h3">'+v+'</span>'
-            if(v.slice(0,3) == '## ') v = '<span class="section h2">'+v+'</span>'
-            if(v.slice(0,2) == '# ') v = '<span class="section h1">'+v+'</span>'
+            if(v.slice(0,7) == '###### ') v = '<span class="h6"><span class="plain">###### </span>'+v.slice(7,v.length)+'</span>'
+            if(v.slice(0,6) == '##### ') v = '<span class="h5"><span class="plain">##### </span>'+v.slice(6,v.length)+'</span>'
+            if(v.slice(0,5) == '#### ') v = '<span class="h4"><span class="plain">#### </span>'+v.slice(5,v.length)+'</span>'
+            if(v.slice(0,4) == '### ') v = '<span class="h3"><span class="plain">### </span>'+v.slice(4,v.length)+'</span>'
+            if(v.slice(0,3) == '## ') v = '<span class="h2"><span class="plain">## </span>'+v.slice(3,v.length)+'</span>'
+            if(v.slice(0,2) == '# ') v = '<span class="h1"><span class="plain"># </span>'+v.slice(2,v.length)+'</span>'
 
             /* 处理无序列表 */
             if(v.slice(0,2) == '- ') v = '<span class="section li">'+v+'</span>'
+            
+            /* 处理分割线 */
+            if(v == '***') v = '<span class="splitLine">***</span>'
 
             /* 引用内容处理 */
             if(v.slice(0,5) == '&gt; ') v = '<span class="blockquote">'+v+'</span>'
+
+            /* 处理图片 */
+            v = v.replace(/\!\[.*\]\(.*\)/g,function(e){
+                let front = e.match(/\[.*\]/)[0].slice(1).slice(0,-1)
+                let end = e.match(/\(.*\)/)[0].slice(1).slice(0,-1)
+                return `<span class="img"><img src="${end}" /><span class="text">![${front}]<span class="plain">(${end})</span></span></span>`
+            })
+
+            /* 处理超链接 */
+            v = v.replace(/\[.*\]\(.*\)/g,function(e){
+                let front = e.match(/\[.*\]/)[0].slice(1).slice(0,-1)
+                let end = e.match(/\(.*\)/)[0].slice(1).slice(0,-1)
+                return '<span class="plain">[</span>'+front+'<span class="plain">]</span><span class="plain">('+end+')</span>'
+            })
 
             /* 重点内容处理 */
             if(v && v.indexOf('`')>-1){
