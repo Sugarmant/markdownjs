@@ -47,7 +47,7 @@ const handleEditor = (html)=>{
             if(v == '***') v = '<span class="splitLine">***</span>'
 
             /* 引用内容处理 */
-            if(v.slice(0,5) == '&gt; ') v = '<blockquote>'+v+'</blockquote>'
+            if(v.slice(0,5) == '&gt; ') v = '<blockquote><span class="plain">'+v.slice(0,5)+'</span>'+v.slice(5,v.length)+'</blockquote>'
 
             /* 处理图片 */
             v = v.replace(/\!\[.*\]\(.*\)/g,function(e){
