@@ -1,6 +1,6 @@
 {
   "name": "markdown",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "处理前端文章的markdown",
   "main": "index.js",
   "scripts": {
