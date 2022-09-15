@@ -38,7 +38,8 @@ class Markdown{
             if(e.ctrlKey && (e.keyCode == 66 || e.keyCode == 73 || e.keyCode == 90 || e.keyCode == 89)){
                 e.preventDefault()
             }
-            if(e.keyCode == 13) e.preventDefault()
+            if(e.keyCode == 13 || e.keyCode == 9) e.preventDefault()
+            if(e.shiftKey && e.keyCode == 9) e.preventDefault()
 
             setTimeout(()=>{
                 let range = window.getSelection().getRangeAt(0)
@@ -47,6 +48,33 @@ class Markdown{
                     const position = getCursor(entry)
                     range.insertNode(new Text('\n'))
                     setCursor(entry,...[position[0]+1,position[1]+1])
+                }
+
+                if(e.keyCode == 9 && !e.shiftKey){
+                    const position = getCursor(entry)
+                    range.insertNode(new Text("    "))
+                    setCursor(entry,...[position[0]+4,position[1]+4])
+                }
+                if(e.shiftKey && e.keyCode == 9){
+                    const position = getCursor(entry)
+                    let con = this.entry.innerText
+                    for(let i=position[0];i>0;i--){
+                        i = parseInt(i)  //防止出现小数
+                        if(con[i] == '\n' && i!=position[0]){
+                            
+                            const spaceLength = 4-con.slice(i+1,i+5).replace(/^ +/g,'').length
+                            if(spaceLength){
+                                const start = con.slice(0,i+1)
+                                const end = con.slice(1+i+spaceLength,con.length)
+                                this.renderEditor(start+end)
+                                this.saveCache()
+                                
+                                setCursor(entry,...[position[0]-spaceLength,position[1]-spaceLength])
+                            }
+                            break
+                        }
+                    }
+                    
                 }
 
                 if(e.ctrlKey){
@@ -67,6 +95,7 @@ class Markdown{
                         this.saveCache()
                     }
                 }
+                
                 this.analysed(this.renderView(entry.innerText))
             },10)
         })

@@ -72,6 +72,9 @@
   width: 100%;
   display: inline-block;
 }
+.__markdown__ .img img {
+  width: 100%;
+}
 .__markdown__ .section {
   width: 100%;
   line-height: 26px;
@@ -87,7 +90,11 @@
   box-sizing: border-box;
   border-left: solid 5px #ccc;
 }
-.__markdown__ .code {
+.__markdown__ pre {
+  display: inline-block;
+  width: 100%;
+}
+.__markdown__ code {
   color: #eee;
   width: 100%;
   background-color: #1E1E1E;
@@ -99,9 +106,44 @@
   white-space: pre-wrap;
   display: inline-block;
 }
-.__markdown__ .ref {
+.__markdown__ cite {
   background-color: rgba(0, 0, 0, 0.05);
   font-size: 14px;
+  font-style: normal;
+}
+.__markdown__ .del {
+  font-size: 10px;
+  font-weight: bold;
+  color: #999;
+}
+.__markdown__ del {
+  font-size: 14px;
+}
+.__markdown__ ul,
+.__markdown__ ol {
+  display: inline-block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  margin: 10px 0;
+}
+.__markdown__ ul li,
+.__markdown__ ol li {
+  display: inline-block;
+  width: 100%;
+  min-height: 30px;
+}
+.__markdown__ ul li span,
+.__markdown__ ol li span {
+  color: #999;
+  font-weight: bold;
+  font-size: 14px;
+}
+.__markdown__ strong span,
+.__markdown__ i span,
+.__markdown__ del span {
+  color: #999;
+  font-weight: 400;
 }
 .__markdown_result__ {
   color: #4d4d4d;
@@ -159,32 +201,17 @@
   margin: 0;
   min-height: 26px;
 }
-.__markdown_result__ .splitLine {
-  border-bottom: solid 1.5px #eee;
-  margin: 10px 0;
+.__markdown_result__ hr {
+  border-style: none;
+  height: 1px;
+  background-color: #eee;
 }
-.__markdown_result__ .ref {
+.__markdown_result__ cite {
   color: #c7254e;
   background-color: antiquewhite;
   padding: 0 5px;
   font-size: 14px;
-}
-.__markdown_result__ .li {
-  padding-left: 30px;
-  position: relative;
-}
-.__markdown_result__ .li::before {
-  line-height: 26px;
-  content: ' ';
-  display: inline-block;
-  width: 5px;
-  height: 5px;
-  border-radius: 2.5px;
-  background-color: #000;
-  margin-right: 7px;
-  position: absolute;
-  left: 13px;
-  top: 13px;
+  font-style: normal;
 }
 .__markdown_result__ a {
   color: #4ea1db;
@@ -201,9 +228,37 @@
   font-size: 14px;
   white-space: pre-wrap;
 }
-.__markdown_result__ .imageLink {
+.__markdown_result__ img {
   width: 100%;
 }
-.__markdown_result__ .imageLink img {
+.__markdown_result__ ul {
   width: 100%;
+  padding-left: 30px;
+  margin: 10px 0;
+  box-sizing: border-box;
+}
+.__markdown_result__ ul li {
+  width: 100%;
+  position: relative;
+  min-height: 30px;
+}
+.__markdown_result__ ul li span {
+  color: #999;
+  font-weight: bold;
+}
+.__markdown_result__ ol {
+  width: 100%;
+  padding-left: 30px;
+  margin: 10px 0;
+  box-sizing: border-box;
+}
+.__markdown_result__ ol li {
+  width: 100%;
+  position: relative;
+  min-height: 30px;
+  box-sizing: border-box;
+}
+.__markdown_result__ ol li span {
+  color: #999;
+  font-weight: bold;
 }

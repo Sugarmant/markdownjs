@@ -3,6 +3,7 @@ const handleEditor = (html)=>{
     const strs = html.split('\n')
 
     for(let i=0;i<strs.length;i++){
+        /* 处理code */
         strs[i] = strs[i].replace(/</g,'&lt;').replace(/>/g,'&gt;')
         let v = strs[i]
         
@@ -25,12 +26,45 @@ const handleEditor = (html)=>{
             i++
             delete strs[i]
             let language = box.split('\n')[0].slice(3).replace(' ','').replace('\n','').replace('\r','')
-            let codeBox = document.createElement('span')
-            codeBox.className = 'code'
             if(!Prism.languages[language]) language = 'jsx'
             const html = Prism.highlight(box, Prism.languages[language.replace('\r','')],language);
-            codeBox.innerHTML = html
-            strs[i] = codeBox.outerHTML
+            strs[i] = '<pre><code>'+html+'</code></pre>'
+        }else if(v.slice(0,2) == '- '){
+            /* 处理无序列表 */
+            let box = '';
+            for(let e=i;e<strs.length;e++){
+                let vv = strs[e]
+                if(vv.slice(0,2) == '- '){
+                    if(strs[e+1].slice(0,2) == '- '){
+                        box+='<li><span>- </span>'+vv.slice(2,vv.length)+'\n</li>'
+                    }else{
+                        box+='<li><span>- </span>'+vv.slice(2,vv.length)+'</li>'
+                    }
+                }else{
+                    break;
+                }
+                i=e
+                delete strs[i]
+            }
+            strs[i] = '<ul>'+box+'</ul>'
+        }else if(v.match(/^[0-9]\.\s/)){
+            /* 处理有序列表 */
+            let box = '';
+            for(let e=i;e<strs.length;e++){
+                let vv = strs[e]
+                if(vv.match(/^[0-9]\.\s/)){
+                    if(strs[e+1].match(/^[0-9]\.\s/)){
+                        box+='<li><span>'+vv.match(/^[0-9]\.\s/)[0]+'</span>'+vv.replace(/^[0-9]\.\s/,'')+'\n</li>'
+                    }else{
+                        box+='<li><span>'+vv.match(/^[0-9]\.\s/)[0]+'</span>'+vv.replace(/^[0-9]\.\s/,'')+'</li>'
+                    }
+                }else{
+                    break;
+                }
+                i=e
+                delete strs[i]
+            }
+            strs[i] = '<ol>'+box+'</ol>'
         }else{
 
             if(v.slice(0,7) == '###### ') v = '<h6><span class="plain">###### </span>'+v.slice(7,v.length)+'</h6>'
@@ -40,9 +74,6 @@ const handleEditor = (html)=>{
             if(v.slice(0,3) == '## ') v = '<h2><span class="plain">## </span>'+v.slice(3,v.length)+'</h2>'
             if(v.slice(0,2) == '# ') v = '<h1><span class="plain"># </span>'+v.slice(2,v.length)+'</h1>'
 
-            /* 处理无序列表 */
-            if(v.slice(0,2) == '- ') v = '<span class="section li">'+v+'</span>'
-            
             /* 处理分割线 */
             if(v == '***') v = '<span class="splitLine">***</span>'
 
@@ -51,17 +82,42 @@ const handleEditor = (html)=>{
 
             /* 处理图片 */
             v = v.replace(/\!\[.*\]\(.*\)/g,function(e){
-                let front = e.match(/\[.*\]/)[0].slice(1).slice(0,-1)
-                let end = e.match(/\(.*\)/)[0].slice(1).slice(0,-1)
+                let front = e.match(/^\!\[.*\]\(/)[0].slice(2,-2)
+                let end = e.match(/(?=\]\().*\)$/)[0].slice(2,-1)
                 return `<span class="img"><img src="${end}" /><span class="text">![${front}]<span class="plain">(${end})</span></span></span>`
             })
 
             /* 处理超链接 */
             v = v.replace(/\[.*\]\(.*\)/g,function(e){
-                let front = e.match(/\[.*\]/)[0].slice(1).slice(0,-1)
-                let end = e.match(/\(.*\)/)[0].slice(1).slice(0,-1)
+                let front = e.match(/^\[.*\]\(/)[0].slice(1,-2)
+                let end = e.match(/(?=\]\().*\)$/)[0].slice(2,-1)
                 return '<span class="plain">[</span>'+front+'<span class="plain">]</span><span class="plain">('+end+')</span>'
+                
             })
+
+            /* 删除线处理 */
+            if(v && v.indexOf('~~')>-1){
+                let con = v
+                let handled = ''
+                while(con.indexOf('~~')>-1){
+                    let first = con.indexOf('~~')
+                    const pre = con.slice(0,first)
+                    con = con.slice(first+2)
+                    
+                    let second = con.indexOf('~~')
+                    if(second>-1 && pre[pre.length-1]!='>'){
+                        handled += pre+'<span class="del">~~</span><del>'
+                        handled += con.slice(0,second)+'</del><span class="del">~~</span>'
+                        con = con.slice(second+2)
+                    }else{
+                        handled += pre+(first>-2?'~~':'')
+                    }
+                }
+                handled+=con
+                if(handled != v){
+                    v = handled;
+                }
+            }
 
             /* 重点内容处理 */
             if(v && v.indexOf('`')>-1){
@@ -73,8 +129,8 @@ const handleEditor = (html)=>{
                     con = con.slice(first+1)
                     let second = con.indexOf('`')
                     if(second>-1 && pre[pre.length-1]!='>'){
-                        handled += pre+'<span class="ref">`'
-                        handled += con.slice(0,second)+'`</span>'
+                        handled += pre+'<cite>`'
+                        handled += con.slice(0,second)+'`</cite>'
                         con = con.slice(second+1)
                     }else{
                         
@@ -98,8 +154,8 @@ const handleEditor = (html)=>{
                     
                     let second = con.indexOf('**')
                     if(second>-1 && pre[pre.length-1]!='>'){
-                        handled += pre+'<strong>**'
-                        handled += con.slice(0,second)+'**</strong>'
+                        handled += pre+'<strong><span>**</span>'
+                        handled += con.slice(0,second)+'<span>**</span></strong>'
                         con = con.slice(second+2)
                     }else{
                         handled += pre+(first>-2?'**':'')
@@ -122,8 +178,8 @@ const handleEditor = (html)=>{
 
                     let second = con.indexOf('*')
                     if(second>-1 && pre[pre.length-1]!='>'){
-                        handled += pre+'<i>*'
-                        handled += con.slice(0,second)+'*</i>'
+                        handled += pre+'<i><span>*</span>'
+                        handled += con.slice(0,second)+'<span>*</span></i>'
                         con = con.slice(second+1)
                     }else{
                         handled += pre+(first>-1?'*':'')
