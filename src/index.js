@@ -40,12 +40,16 @@ class Markdown{
             }
             if(e.keyCode == 13 || e.keyCode == 9) e.preventDefault()
             if(e.shiftKey && e.keyCode == 9) e.preventDefault()
-
+            if(e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40 && e.key!='Process'){
+                if(!(e.ctrlKey && (e.keyCode == 90 || e.keyCode == 89))) {
+                    this.saveCache()
+                }
+            }
             setTimeout(()=>{
                 let range = window.getSelection().getRangeAt(0)
-
                 if(e.keyCode == 13){
                     const position = getCursor(entry)
+                    if(this.entry.innerText[position[0]] != '\n') range.insertNode(new Text('\n'))
                     range.insertNode(new Text('\n'))
                     setCursor(entry,...[position[0]+1,position[1]+1])
                 }
@@ -68,13 +72,11 @@ class Markdown{
                                 const end = con.slice(1+i+spaceLength,con.length)
                                 this.renderEditor(start+end)
                                 this.saveCache()
-                                
                                 setCursor(entry,...[position[0]-spaceLength,position[1]-spaceLength])
                             }
                             break
                         }
                     }
-                    
                 }
 
                 if(e.ctrlKey){
@@ -91,17 +93,11 @@ class Markdown{
                     this.redo()
                 }else{
                     if(e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40 && e.key!='Process'){
+                        console.log(range)
                         this.renderEditor(entry.innerText)
-                        this.saveCache()
                     }
                 }
-                
                 this.analysed(this.renderView(entry.innerText))
-            },10)
-        })
-        entry.addEventListener('mouseup',e=>{
-            setTimeout(()=>{
-                this.saveCache()
             },10)
         })
     }

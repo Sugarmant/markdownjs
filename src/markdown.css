@@ -1,8 +1,13 @@
+html,
+body {
+  height: 100%;
+}
 .__markdown__ {
   color: #4d4d4d;
   white-space: pre-wrap;
   display: block;
   line-height: 26px;
+  height: 100%;
 }
 .__markdown__ blockquote {
   width: 100%;
@@ -19,42 +24,42 @@
 }
 .__markdown__ h1 {
   display: inline-block;
-  font-weight: normal;
+  font-weight: 600;
   font-size: 24px;
   color: #4f4f4f;
   margin: 8px 0 16px;
 }
 .__markdown__ h2 {
   display: inline-block;
-  font-weight: normal;
+  font-weight: 600;
   font-size: 22px;
   color: #4f4f4f;
   margin: 8px 0 16px;
 }
 .__markdown__ h3 {
   display: inline-block;
-  font-weight: normal;
+  font-weight: 600;
   font-size: 20px;
   color: #4f4f4f;
   margin: 8px 0 16px;
 }
 .__markdown__ h4 {
   display: inline-block;
-  font-weight: normal;
+  font-weight: 600;
   font-size: 18px;
   color: #4f4f4f;
   margin: 8px 0 16px;
 }
 .__markdown__ h5 {
   display: inline-block;
-  font-weight: normal;
+  font-weight: 600;
   font-size: 16px;
   color: #4f4f4f;
   margin: 8px 0 16px;
 }
 .__markdown__ h6 {
   display: inline-block;
-  font-weight: normal;
+  font-weight: 600;
   font-size: 16px;
   color: #4f4f4f;
   margin: 8px 0 16px;
@@ -64,6 +69,7 @@
 }
 .__markdown__ .splitLine {
   color: #999;
+  margin: 15px 0;
 }
 .__markdown__ .img {
   display: inline;
@@ -105,6 +111,7 @@
   font-size: 14px;
   white-space: pre-wrap;
   display: inline-block;
+  word-break: break-word;
 }
 .__markdown__ cite {
   background-color: rgba(0, 0, 0, 0.05);
@@ -162,37 +169,37 @@
   margin-bottom: 15px;
 }
 .__markdown_result__ h1 {
-  font-weight: normal;
+  font-weight: 600;
   font-size: 24px;
   color: #4f4f4f;
   margin: 8px 0 16px;
 }
 .__markdown_result__ h2 {
-  font-weight: normal;
+  font-weight: 600;
   font-size: 22px;
   color: #4f4f4f;
   margin: 8px 0 16px;
 }
 .__markdown_result__ h3 {
-  font-weight: normal;
+  font-weight: 600;
   font-size: 20px;
   color: #4f4f4f;
   margin: 8px 0 16px;
 }
 .__markdown_result__ h4 {
-  font-weight: normal;
+  font-weight: 600;
   font-size: 18px;
   color: #4f4f4f;
   margin: 8px 0 16px;
 }
 .__markdown_result__ h5 {
-  font-weight: normal;
+  font-weight: 600;
   font-size: 16px;
   color: #4f4f4f;
   margin: 8px 0 16px;
 }
 .__markdown_result__ h6 {
-  font-weight: normal;
+  font-weight: 600;
   font-size: 16px;
   color: #4f4f4f;
   margin: 8px 0 16px;
@@ -205,6 +212,7 @@
   border-style: none;
   height: 1px;
   background-color: #eee;
+  margin: 15px 0;
 }
 .__markdown_result__ cite {
   color: #c7254e;
@@ -227,6 +235,7 @@
   font-family: Consolas, 'Courier New', monospace;
   font-size: 14px;
   white-space: pre-wrap;
+  word-break: break-word;
 }
 .__markdown_result__ img {
   width: 100%;

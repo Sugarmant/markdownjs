@@ -91,7 +91,7 @@ const handleEditor = (html)=>{
             v = v.replace(/\[.*\]\(.*\)/g,function(e){
                 let front = e.match(/^\[.*\]\(/)[0].slice(1,-2)
                 let end = e.match(/(?=\]\().*\)$/)[0].slice(2,-1)
-                return '<span class="plain">[</span>'+front+'<span class="plain">]</span><span class="plain">('+end+')</span>'
+                return '<span class="plain">[</span>'+front+'<span class="plain">]</span><span class="plain">(<a href="'+end+'">'+end+'</a>)</span>'
                 
             })
 

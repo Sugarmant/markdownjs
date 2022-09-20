@@ -11,7 +11,12 @@ export function getCursor(dom){
     if((!start[0] || !end[0])){
         throw new Error('Cursor not in the dom')
     }
-
+    
+    if(dom == range.startContainer){
+        const len = dom.innerText.length
+        return [len,len]
+    }
+   
     return [start[1],end[1]]
 
     function countLength(node,targetNode,offset){
@@ -23,14 +28,15 @@ export function getCursor(dom){
             return [false,node.length]
         }
         let len = 0
+
         for(let item of node.childNodes){
             const result = countLength(item,targetNode,offset)
+            
             if(result[0] == true){
                 return [true,len+result[1]]
             }else{
                 len = len+result[1]
             }
-            
         }
         return [false,len]
     }
