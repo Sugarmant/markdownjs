@@ -49,15 +49,32 @@ class Markdown{
                 let range = window.getSelection().getRangeAt(0)
                 if(e.keyCode == 13){
                     const position = getCursor(entry)
-                    if(this.entry.innerText[position[0]] != '\n') range.insertNode(new Text('\n'))
+                    if(this.entry.innerText.length == position[0]) range.insertNode(new Text('\n'))
                     range.insertNode(new Text('\n'))
                     setCursor(entry,...[position[0]+1,position[1]+1])
+                    if(range.collapse){
+                        if(range.startContainer){
+                            const parent = range.startContainer.parentElement.parentElement
+                            if(entry.contains(parent) && parent.tagName == 'UL'){
+                                const li = document.createElement('li')
+                                li.innerHTML = '<span>- </span>'
+                                range.insertNode(li)
+                                setCursor(entry,position[0]+3,position[0]+3)
+                            }else if(entry.contains(parent) && parent.tagName == 'OL'){
+                                const li = document.createElement('li')
+                                const lastNumber = Number(parent.lastChild.querySelector('span').innerText)+1
+                                li.innerHTML = '<span>'+lastNumber+'. </span>'
+                                range.insertNode(li)
+                                setCursor(entry,position[0]+3+String(lastNumber).length,position[0]+3+String(lastNumber).length)
+                            }
+                        }
+                    }
                 }
 
                 if(e.keyCode == 9 && !e.shiftKey){
                     const position = getCursor(entry)
                     range.insertNode(new Text("    "))
-                    setCursor(entry,...[position[0]+4,position[1]+4])
+                    setCursor(entry,position[0]+4,position[1]+4)
                 }
                 if(e.shiftKey && e.keyCode == 9){
                     const position = getCursor(entry)
@@ -72,7 +89,7 @@ class Markdown{
                                 const end = con.slice(1+i+spaceLength,con.length)
                                 this.renderEditor(start+end)
                                 this.saveCache()
-                                setCursor(entry,...[position[0]-spaceLength,position[1]-spaceLength])
+                                setCursor(entry,position[0]-spaceLength,position[1]-spaceLength)
                             }
                             break
                         }
@@ -93,7 +110,6 @@ class Markdown{
                     this.redo()
                 }else{
                     if(e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40 && e.key!='Process'){
-                        console.log(range)
                         this.renderEditor(entry.innerText)
                     }
                 }

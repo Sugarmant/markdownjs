@@ -6,15 +6,17 @@ const handleEditor = (html)=>{
         /* 处理code */
         strs[i] = strs[i].replace(/</g,'&lt;').replace(/>/g,'&gt;')
         let v = strs[i]
-        
+        let start,end = ''
         if(v.slice(0,3) == '```'){
             let box = ''
-            box+=v+'\n'
+            box+='\n'
+            start = '```'
             delete strs[i]
             for(let e=i+1;e<strs.length;e++){
                 let vv = strs[e]
                 if(vv.slice(0,3) == '```'){
-                    box+=vv+'\n'
+                    box+='\n'
+                    end = '```'
                     break;
                 }else{
                     box+=vv+'\n'
@@ -25,10 +27,11 @@ const handleEditor = (html)=>{
             box = box.replace(/\n(?![\s\S]*\n)/,'')
             i++
             delete strs[i]
-            let language = box.split('\n')[0].slice(3).replace(' ','').replace('\n','').replace('\r','')
+            const originLang = v.split('\n')[0].slice(3).replace(' ','').replace('\n','').replace('\r','')
+            let language = v.split('\n')[0].slice(3).replace(' ','').replace('\n','').replace('\r','')
             if(!Prism.languages[language]) language = 'jsx'
             const html = Prism.highlight(box, Prism.languages[language.replace('\r','')],language);
-            strs[i] = '<pre><code>'+html+'</code></pre>'
+            strs[i] = '<pre><code><span>'+start+originLang+'</span>'+html+'<span>'+end+'</span></code></pre>'
         }else if(v.slice(0,2) == '- '){
             /* 处理无序列表 */
             let box = '';
@@ -47,17 +50,19 @@ const handleEditor = (html)=>{
                 delete strs[i]
             }
             strs[i] = '<ul>'+box+'</ul>'
-        }else if(v.match(/^[0-9]\.\s/)){
+        }else if(v.match(/^[0-9]+\.\s+/)){
             /* 处理有序列表 */
             let box = '';
+            let lab = 1
             for(let e=i;e<strs.length;e++){
                 let vv = strs[e]
-                if(vv.match(/^[0-9]\.\s/)){
-                    if(strs[e+1].match(/^[0-9]\.\s/)){
-                        box+='<li><span>'+vv.match(/^[0-9]\.\s/)[0]+'</span>'+vv.replace(/^[0-9]\.\s/,'')+'\n</li>'
+                if(vv.match(/^[0-9]+\.\s/)){
+                    if(strs[e+1].match(/^[0-9]+\.\s/)){
+                        box+='<li><span>'+lab+'. </span>'+vv.replace(/^[0-9]+\.\s/,'')+'\n</li>'
                     }else{
-                        box+='<li><span>'+vv.match(/^[0-9]\.\s/)[0]+'</span>'+vv.replace(/^[0-9]\.\s/,'')+'</li>'
+                        box+='<li><span>'+lab+'. </span>'+vv.replace(/^[0-9]+\.\s/,'')+'</li>'
                     }
+                    lab++
                 }else{
                     break;
                 }

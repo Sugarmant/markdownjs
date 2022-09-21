@@ -4,7 +4,6 @@
   "description": "处理前端文章的markdown",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.config.js --mode production ",
     "watch": "webpack --watch --config webpack.config.js --mode production "
   },

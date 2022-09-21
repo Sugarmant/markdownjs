@@ -8,7 +8,7 @@ const handleView = (html)=>{
         let language = ''
         if(v.slice(0,3) == '```'){
             let box = ''
-            box+=''+'\n'
+            box+=''
             language = v.replace('```','').replace(' ','').replace('\n','').replace('\r','')
             delete strs[i]
             for(let e=i+1;e<strs.length;e++){
@@ -46,16 +46,16 @@ const handleView = (html)=>{
                 delete strs[i]
             }
             strs[i] = '<ul>'+box+'</ul>'
-        }else if(v.match(/^[0-9]\.\s/)){
+        }else if(v.match(/^[0-9]+\.\s/)){
             /* 处理有序列表 */
             let box = '';
             for(let e=i;e<strs.length;e++){
                 let vv = strs[e]
-                if(vv.match(/^[0-9]\.\s/)){
+                if(vv.match(/^[0-9]+\.\s/)){
                     if(strs[e+1].match(/^[0-9]\.\s/)){
-                        box+='<li>'+vv.replace(/^[0-9]\.\s/,'')+'\n</li>'
+                        box+='<li>'+vv.replace(/^[0-9]+\.\s/,'')+'\n</li>'
                     }else{
-                        box+='<li>'+vv.replace(/^[0-9]\.\s/,'')+'</li>'
+                        box+='<li>'+vv.replace(/^[0-9]+\.\s/,'')+'</li>'
                     }
                 }else{
                     break;
