@@ -39,9 +39,9 @@ const handleEditor = (html)=>{
                 let vv = strs[e]
                 if(vv.slice(0,2) == '- '){
                     if(strs[e+1].slice(0,2) == '- '){
-                        box+='<li><span>- </span>'+vv.slice(2,vv.length)+'\n</li>'
+                        box+='<li><span>- </span>'+vv.slice(2)+'\n</li>'
                     }else{
-                        box+='<li><span>- </span>'+vv.slice(2,vv.length)+'</li>'
+                        box+='<li><span>- </span>'+vv.slice(2)+'</li>'
                     }
                 }else{
                     break;
@@ -72,18 +72,18 @@ const handleEditor = (html)=>{
             strs[i] = '<ol>'+box+'</ol>'
         }else{
 
-            if(v.slice(0,7) == '###### ') v = '<h6><span class="plain">###### </span>'+v.slice(7,v.length)+'</h6>'
-            if(v.slice(0,6) == '##### ') v = '<h5><span class="plain">##### </span>'+v.slice(6,v.length)+'</h5>'
-            if(v.slice(0,5) == '#### ') v = '<h4><span class="plain">#### </span>'+v.slice(5,v.length)+'</h4>'
-            if(v.slice(0,4) == '### ') v = '<h3><span class="plain">### </span>'+v.slice(4,v.length)+'</h3>'
-            if(v.slice(0,3) == '## ') v = '<h2><span class="plain">## </span>'+v.slice(3,v.length)+'</h2>'
-            if(v.slice(0,2) == '# ') v = '<h1><span class="plain"># </span>'+v.slice(2,v.length)+'</h1>'
+            if(v.slice(0,7) == '###### ') v = '<h6><span class="plain">###### </span>'+v.slice(7)+'</h6>'
+            if(v.slice(0,6) == '##### ') v = '<h5><span class="plain">##### </span>'+v.slice(6)+'</h5>'
+            if(v.slice(0,5) == '#### ') v = '<h4><span class="plain">#### </span>'+v.slice(5)+'</h4>'
+            if(v.slice(0,4) == '### ') v = '<h3><span class="plain">### </span>'+v.slice(4)+'</h3>'
+            if(v.slice(0,3) == '## ') v = '<h2><span class="plain">## </span>'+v.slice(3)+'</h2>'
+            if(v.slice(0,2) == '# ') v = '<h1><span class="plain"># </span>'+v.slice(2)+'</h1>'
 
             /* 处理分割线 */
             if(v == '***') v = '<span class="splitLine">***</span>'
 
             /* 引用内容处理 */
-            if(v.slice(0,5) == '&gt; ') v = '<blockquote><span class="plain">'+v.slice(0,5)+'</span>'+v.slice(5,v.length)+'</blockquote>'
+            if(v.slice(0,5) == '&gt; ') v = '<blockquote><span class="plain">'+v.slice(0,5)+'</span>'+v.slice(5)+'</blockquote>'
 
             /* 处理图片 */
             v = v.replace(/\!\[.*\]\(.*\)/g,function(e){
@@ -96,6 +96,7 @@ const handleEditor = (html)=>{
             v = v.replace(/\[.*\]\(.*\)/g,function(e){
                 let front = e.match(/^\[.*\]\(/)[0].slice(1,-2)
                 let end = e.match(/(?=\]\().*\)$/)[0].slice(2,-1)
+                end = e.replace(front,'').slice(3).slice(0,-1)
                 return '<span class="plain">[</span>'+front+'<span class="plain">]</span><span class="plain">(<a href="'+end+'">'+end+'</a>)</span>'
                 
             })

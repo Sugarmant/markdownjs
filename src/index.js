@@ -3,24 +3,50 @@ import './prism/prism.css'
 import './markdown.css'
 
 import handleEditor from './handleEditor'
-
 import handleView from './handleView'
+import keydownHook from './keydownHook'
+
+import getCatalog from './getCatalog'
 
 import {getCursor,setCursor} from './util'
 
+import {
+    rangeBold,
+    rangeItalics,
+    rangeDel,
+    rangeCite,
+    rangeH1,
+    rangeH2,
+    rangeHr,
+    rangeLink,
+    rangeUl,
+    rangeOl,
+    rangeImg,
+    rangeCode
+} from './shortcut'
+
 class Markdown{
-    constructor(dom){
-        this.entry = document.querySelector(dom);
+    constructor(data){
+        
+        this.entry = document.querySelector(data.editor);
+        this.stage = document.querySelector(data.stage);
+        this.catalog = document.querySelector(data.catalog);
         this.cache = []
         this.cacheIndex = -1
         this.lastEdit;
-        this.analysed = function(){}
+        this.analysed = function(str){
+            if(this.stage) this.stage.innerHTML = str
+        }.bind(this)
+        this.getCatalogCallBack = function(str){
+            if(this.catalog) this.catalog.innerHTML = str
+        }.bind(this)
 
         var entry = this.entry
         entry.setAttribute('contenteditable','true')
         entry.className= 'editor __markdown__'
         entry.innerHTML = ''
         entry.focus()
+
         /* 处理复制过来的内容 */
         entry.addEventListener('paste',function(e){
             e.preventDefault()
@@ -28,99 +54,27 @@ class Markdown{
             document.execCommand('insertText',false,paste)
         })
 
+        /* 禁止拖拽 */
         entry.addEventListener('dragover',e=>{
             e.preventDefault()
         })
 
         /* 处理键盘事件 */
-        entry.addEventListener('keydown',e=>{
-            /* 阻止 加粗 斜体 撤回 恢复 事件*/
-            if(e.ctrlKey && (e.keyCode == 66 || e.keyCode == 73 || e.keyCode == 90 || e.keyCode == 89)){
-                e.preventDefault()
-            }
-            if(e.keyCode == 13 || e.keyCode == 9) e.preventDefault()
-            if(e.shiftKey && e.keyCode == 9) e.preventDefault()
-            if(e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40 && e.key!='Process'){
-                if(!(e.ctrlKey && (e.keyCode == 90 || e.keyCode == 89))) {
-                    this.saveCache()
-                }
-            }
-            setTimeout(()=>{
-                let range = window.getSelection().getRangeAt(0)
-                if(e.keyCode == 13){
-                    const position = getCursor(entry)
-                    if(this.entry.innerText.length == position[0]) range.insertNode(new Text('\n'))
-                    range.insertNode(new Text('\n'))
-                    setCursor(entry,...[position[0]+1,position[1]+1])
-                    if(range.collapse){
-                        if(range.startContainer){
-                            const parent = range.startContainer.parentElement.parentElement
-                            if(entry.contains(parent) && parent.tagName == 'UL'){
-                                const li = document.createElement('li')
-                                li.innerHTML = '<span>- </span>'
-                                range.insertNode(li)
-                                setCursor(entry,position[0]+3,position[0]+3)
-                            }else if(entry.contains(parent) && parent.tagName == 'OL'){
-                                const li = document.createElement('li')
-                                const lastNumber = Number(parent.lastChild.querySelector('span').innerText)+1
-                                li.innerHTML = '<span>'+lastNumber+'. </span>'
-                                range.insertNode(li)
-                                setCursor(entry,position[0]+3+String(lastNumber).length,position[0]+3+String(lastNumber).length)
-                            }
-                        }
-                    }
-                }
+        entry.addEventListener('keydown',keydownHook.bind(this))
 
-                if(e.keyCode == 9 && !e.shiftKey){
-                    const position = getCursor(entry)
-                    range.insertNode(new Text("    "))
-                    setCursor(entry,position[0]+4,position[1]+4)
-                }
-                if(e.shiftKey && e.keyCode == 9){
-                    const position = getCursor(entry)
-                    let con = this.entry.innerText
-                    for(let i=position[0];i>0;i--){
-                        i = parseInt(i)  //防止出现小数
-                        if(con[i] == '\n' && i!=position[0]){
-                            
-                            const spaceLength = 4-con.slice(i+1,i+5).replace(/^ +/g,'').length
-                            if(spaceLength){
-                                const start = con.slice(0,i+1)
-                                const end = con.slice(1+i+spaceLength,con.length)
-                                this.renderEditor(start+end)
-                                this.saveCache()
-                                setCursor(entry,position[0]-spaceLength,position[1]-spaceLength)
-                            }
-                            break
-                        }
-                    }
-                }
-
-                if(e.ctrlKey){
-                    if(e.keyCode == 66){
-                        rangeBold(range)
-                    }else if(e.keyCode == 73){
-                        rangeItalics(range)
-                    }
-                }
-
-                if(e.ctrlKey && e.keyCode == 90){
-                    this.undo()
-                }else if(e.ctrlKey && e.keyCode == 89){
-                    this.redo()
-                }else{
-                    if(e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40 && e.key!='Process'){
-                        this.renderEditor(entry.innerText)
-                    }
-                }
-                this.analysed(this.renderView(entry.innerText))
-            },10)
-        })
+        entry.addEventListener('mouseup',function(){
+            this.saveCache()
+        }.bind(this))
     }
 
     /* 被动解析 */
     onAnalysed(fun){
         this.analysed = fun
+    }
+
+    /* 被动获取目录 */
+    onGetCatalog(fun){
+        this.getCatalogCallBack = fun
     }
 
     renderView(html){
@@ -134,6 +88,8 @@ class Markdown{
         const position = getCursor(this.entry)
         this.entry.innerHTML = handleEditor(html)
         setCursor(this.entry,...position)
+        this.getCatalogCallBack(getCatalog(html))
+        
     }
 
     /* 设置样例 */
@@ -143,16 +99,28 @@ class Markdown{
         this.saveCache(true)
     }
 
+    refresh(text,pos){
+        const position = pos?pos:getCursor(this.entry)
+        this.renderEditor(text?text:this.entry.innerText)
+        this.analysed(this.renderView(text?text:this.entry.innerText))
+        setCursor(this.entry,...position)
+        this.entry.focus()
+    }
+
     /* 存储编辑缓存 */
     saveCache(init){
         if(init){
-            this.cacheIndex = -1
-            this.cache = []
-            this.lastEdit = this.entry.cloneNode(true)
+            this.cacheIndex = 0
+            this.cache = [{
+                node:this.entry.cloneNode(true),
+                position:getCursor(this.entry)
+            }]
+            this.lastEdit = this.entry.cloneNode(true).innerText
         }
+        
         const cloneEntry = this.entry.cloneNode(true)
-        if(this.lastEdit != cloneEntry.innerHTML){
-            this.lastEdit = cloneEntry.innerHTML
+        if(this.lastEdit != cloneEntry.innerText){
+            this.lastEdit = cloneEntry.innerText
             if(this.cache.length-1>this.cacheIndex){
                 this.cache = this.cache.slice(0,this.cacheIndex+1)
             }
@@ -169,71 +137,56 @@ class Markdown{
     /* 撤销 */
     undo(){
         if(this.cacheIndex<=0) return
-        
         this.cacheIndex--
         const last = this.cache[this.cacheIndex]
-        this.entry.innerHTML = last.node.innerHTML
-        this.analysed(this.renderView(last.node.innerText))
+        this.refresh(last.node.innerText,last.position)
 
         const cloneEntry = this.entry.cloneNode(true)
-        this.lastEdit = cloneEntry.innerHTML
-        setCursor(this.entry,...last.position)
+        this.lastEdit = cloneEntry.innerText
     }
 
     /* 恢复 */
     redo(){
         if(this.cacheIndex == this.cache.length-1) return
-        
+
         this.cacheIndex++
         const next = this.cache[this.cacheIndex]
-        this.entry.innerHTML = next.node.innerHTML
-        this.analysed(this.renderView(next.node.innerText))
+        this.refresh(next.node.innerText,next.position)
 
         const cloneEntry = this.entry.cloneNode(true)
-        this.lastEdit = cloneEntry.innerHTML
-        setCursor(this.entry,...next.position)
+        this.lastEdit = cloneEntry.innerText
+    }
+
+    /* 触发方法 */
+    dispatch(type){
+        switch(type){
+            case 'del':rangeDel(getRange());break;
+            case 'italics':rangeItalics(getRange());break;
+            case 'bold':rangeBold(getRange());break;
+            case 'cite':rangeCite(getRange());break;
+            case 'h1':rangeH1(getRange());break;
+            case 'h2':rangeH2(getRange());break;
+            case 'hr':rangeHr(getRange());break;
+            case 'link':rangeLink(getRange());break;
+            case 'ul':rangeUl(getRange());break;
+            case 'ol':rangeOl(getRange());break;
+            case 'img':rangeImg(getRange());break;
+            case 'code':rangeCode(getRange());break;
+            default:throw new Error('"'+type+'"'+" isn't a valid value.");
+        }
+        this.refresh()
+        this.saveCache()
     }
 }
 
 
-/* 处理加粗内容 */
-function rangeBold(r){
-    const start = r.startOffset
-    const end = r.endOffset
-    const t = r.startContainer.wholeText
-    const inner = t.slice(start,end)?t.slice(start,end):'加粗样式'
-    if(r.startContainer == r.endContainer){
-        const resultText = t.slice(0,start)+'**'+inner+'**'+t.slice(end,t.length)
-        r.startContainer.nodeValue = resultText
-        r.setStart(r.startContainer,start+2)
-        r.setEnd(r.startContainer,start+2+inner.length)
+function getRange(){
+    const selection = document.getSelection()
+    if(selection.rangeCount){
+        return selection.getRangeAt(0)
     }else{
-        const et = r.endContainer.wholeText
-        r.startContainer.nodeValue = t.slice(0,r.startOffset) + '**' + t.slice(r.startOffset,t.length)
-        r.endContainer.nodeValue = et.slice(0,r.endOffset) + '**' + et.slice(r.endOffset,et.length)
-        r.setStart(r.startContainer,start+2)
-        r.setEnd(r.endContainer,end)
-    } 
-}
-
-/* 处理斜体内容 */
-function rangeItalics(r){
-    const start = r.startOffset
-    const end = r.endOffset
-    const t = r.startContainer.wholeText
-    const inner = t.slice(start,end)?t.slice(start,end):'斜体样式'
-    if(r.startContainer == r.endContainer){
-        const resultText = t.slice(0,start)+'*'+inner+'*'+t.slice(end,t.length)
-        r.startContainer.nodeValue = resultText
-        r.setStart(r.startContainer,start+1)
-        r.setEnd(r.startContainer,start+1+inner.length)
-    }else{
-        const et = r.endContainer.wholeText
-        r.startContainer.nodeValue = t.slice(0,r.startOffset) + '*' + t.slice(r.startOffset,t.length)
-        r.endContainer.nodeValue = et.slice(0,r.endOffset) + '*' + et.slice(r.endOffset,et.length)
-        r.setStart(r.startContainer,start+1)
-        r.setEnd(r.endContainer,end)
-    } 
+        throw new Error('无范围选择')
+    }
 }
 
 window['Markdown'] = Markdown

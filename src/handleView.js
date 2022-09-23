@@ -91,15 +91,13 @@ const handleView = (html)=>{
             }
 
             /* 处理标题 */
-            if(v.slice(0,7) == '###### ') v = '<h6>'+v.slice(7,v.length)+'</h6>'
-            if(v.slice(0,6) == '##### ') v = '<h5>'+v.slice(6,v.length)+'</h5>'
-            if(v.slice(0,5) == '#### ') v = '<h4>'+v.slice(5,v.length)+'</h4>'
-            if(v.slice(0,4) == '### ') v = '<h3>'+v.slice(4,v.length)+'</h3>'
-            if(v.slice(0,3) == '## ') v = '<h2>'+v.slice(3,v.length)+'</h2>'
-            if(v.slice(0,2) == '# ') v = '<h1>'+v.slice(2,v.length)+'</h1>'
+            const matched = v.match(/^#{1,6}\s/)
+            if(matched){
+                v = '<h'+(matched[0].length-1)+' id="_cata'+i+'_">'+v.slice(matched[0].length)+'</h'+(matched[0].length-1)+'>'
+            }
 
             /* 引用内容处理 */
-            if(v.slice(0,5) == '&gt; ') v = '<blockquote>'+v.slice(5,v.length)+'</blockquote>'
+            if(v.slice(0,5) == '&gt; ') v = '<blockquote>'+v.slice(5)+'</blockquote>'
 
             /* 处理分割线 */
             if(v == '***') v = '<hr />'
@@ -113,7 +111,7 @@ const handleView = (html)=>{
 
             /* 处理超链接 */
             v = v.replace(/\[.*\]\(.*\)/g,function(e){
-                let front = e.match(/^\[.*\]\(/)[0].slice(2,-2)
+                let front = e.match(/^\[.*\]\(/)[0].slice(1,-2)
                 let end = e.match(/(?=\]\().*\)$/)[0].slice(2,-1)
                 return '<a href="'+end+'">'+front+'</a>'
             })

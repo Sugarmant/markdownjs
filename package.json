@@ -4,8 +4,8 @@
   "description": "处理前端文章的markdown",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --config webpack.config.js --mode production ",
-    "watch": "webpack --watch --config webpack.config.js --mode production "
+    "build": "webpack --config build/webpack.prod.config.js --mode production",
+    "dev": "webpack --watch --config build/webpack.dev.config.js --mode development"
   },
   "author": "Yehger",
   "license": "ISC",

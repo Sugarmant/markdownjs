@@ -1,9 +1,8 @@
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
+const dirname = __dirname.replace('build', '')
 module.exports = {
-    entry:{
-        index:'./src/index.js'
-    },
+    entry: dirname + '/src/index.js',
     output: {
         filename: 'markdown.js',
         clean:true,
@@ -28,7 +27,7 @@ module.exports = {
             },
         ],
     },
-    // devtool: 'inline-source-map',
+    devtool: 'inline-source-map',
     plugins:[
         new MiniCssExtractPlugin({
             filename:'markdown.css',
