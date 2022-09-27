@@ -114,14 +114,12 @@ export default function keyboardHook(e){
                 }
             }
         }
-        
         /* 全部处理之后保存 */
-        if(e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40 && e.key!='Process'){
-            if(!(e.ctrlKey && (e.keyCode == 90 || e.keyCode == 89))) {
-                this.renderEditor(this.entry.innerText)
-                this.analysed(this.renderView(this.entry.innerText))
-                this.saveCache()
-            }
-        }
+        if(e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40 || e.altKey) return
+        if(e.ctrlKey && (e.keyCode == 90 || e.keyCode == 89)) return
+        if(e.key == 'Process' && (e.code != 'Space' && e.code!='Period' && e.code!='Comma' && e.code!='Digit1')) return
+        this.renderEditor(this.entry.innerText)
+        this.analysed(this.renderView(this.entry.innerText))
+        this.saveCache()
     },10)
 }

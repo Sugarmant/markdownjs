@@ -1,6 +1,5 @@
 const handleView = (html)=>{
-
-    const strs = html.split('\n')
+    const strs = html.replace(/\r\n/g,'\n').split('\n')
 
     for(let i=0;i<strs.length;i++){
         strs[i] = strs[i].replace(/</g,'&lt;').replace(/>/g,'&gt;')
@@ -65,7 +64,6 @@ const handleView = (html)=>{
             }
             strs[i] = '<ol>'+box+'</ol>'
         }else{
-
              /* 删除线处理 */
              if(v && v.indexOf('~~')>-1){
                 let con = v
@@ -187,14 +185,14 @@ const handleView = (html)=>{
                 }
             }
             strs[i] = v
-            if(v.slice(0,1) != '<' && v.slice(0,-1) != '>'){
+            if(v.indexOf('<hr') != 0 && v.indexOf('<h6') != 0 && v.indexOf('<h5') != 0 && v.indexOf('<h4') != 0 && v.indexOf('<h3') != 0 && v.indexOf('<h2') != 0 && v.indexOf('<h1') != 0 && v.indexOf('<blockquote') != 0){
                 strs[i] = '<p>'+v+'</p>'
             }
         }
     }
     let newArr = []
     strs.map(v=>newArr.push(v))
-    return newArr.join('\n')
+    return newArr.join('')
 }
 
 export default handleView

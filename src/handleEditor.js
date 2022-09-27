@@ -1,7 +1,6 @@
 const handleEditor = (html)=>{
-
-    const strs = html.split('\n')
-
+    const strs = html.replace(/\r\n/g,'\n').split('\n')
+    
     for(let i=0;i<strs.length;i++){
         /* 处理code */
         strs[i] = strs[i].replace(/</g,'&lt;').replace(/>/g,'&gt;')
@@ -57,12 +56,16 @@ const handleEditor = (html)=>{
             for(let e=i;e<strs.length;e++){
                 let vv = strs[e]
                 if(vv.match(/^[0-9]+\.\s/)){
-                    if(strs[e+1].match(/^[0-9]+\.\s/)){
-                        box+='<li><span>'+lab+'. </span>'+vv.replace(/^[0-9]+\.\s/,'')+'\n</li>'
-                    }else{
-                        box+='<li><span>'+lab+'. </span>'+vv.replace(/^[0-9]+\.\s/,'')+'</li>'
+                    try{
+                        if(strs[e+1].match(/^[0-9]+\.\s/)){
+                            box+='<li><span>'+lab+'. </span>'+vv.replace(/^[0-9]+\.\s/,'')+'\n</li>'
+                        }else{
+                            box+='<li><span>'+lab+'. </span>'+vv.replace(/^[0-9]+\.\s/,'')+'</li>'
+                        }
+                        lab++
+                    }catch(err){
+                        break
                     }
-                    lab++
                 }else{
                     break;
                 }

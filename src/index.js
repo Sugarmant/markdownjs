@@ -44,15 +44,21 @@ class Markdown{
         var entry = this.entry
         entry.setAttribute('contenteditable','true')
         entry.className= 'editor __markdown__'
-        entry.innerHTML = ''
+        entry.innerText = ''
         entry.focus()
 
         /* 处理复制过来的内容 */
         entry.addEventListener('paste',function(e){
             e.preventDefault()
             var paste = (e.originalEvent || e).clipboardData.getData('text/plain')
-            document.execCommand('insertText',false,paste)
-        })
+            document.execCommand('insertText',false,paste.replace(/\r\n/g,'\n'))
+            this.refresh()
+            const rn = paste.match(/\r\n/g)
+            if(rn) {
+                const position = getCursor(this.entry)
+                setCursor(this.entry,position[0]+rn.length,position[1]+rn.length)
+            }
+        }.bind(this))
 
         /* 禁止拖拽 */
         entry.addEventListener('dragover',e=>{
@@ -61,7 +67,7 @@ class Markdown{
 
         /* 处理键盘事件 */
         entry.addEventListener('keydown',keydownHook.bind(this))
-
+        
         entry.addEventListener('mouseup',function(){
             this.saveCache()
         }.bind(this))

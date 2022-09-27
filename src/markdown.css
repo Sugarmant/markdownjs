@@ -3,6 +3,7 @@
   white-space: pre-wrap;
   display: block;
   line-height: 26px;
+  word-break: break-all;
 }
 .__markdown__ blockquote {
   width: 100%;
@@ -72,6 +73,8 @@
 .__markdown__ .img .text {
   width: 100%;
   display: inline-block;
+  white-space: wrap;
+  word-break: break-all;
 }
 .__markdown__ .img img {
   width: 100%;
@@ -150,6 +153,8 @@
 .__markdown_result__ {
   color: #4d4d4d;
   line-height: 26px;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 .__markdown_result__ blockquote {
   width: 100%;
