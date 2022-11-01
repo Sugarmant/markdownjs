@@ -111,7 +111,7 @@
   display: inline-block;
   word-break: break-word;
 }
-.__markdown__ cite {
+.__markdown__ mark {
   background-color: rgba(0, 0, 0, 0.05);
   font-size: 14px;
   font-style: normal;
@@ -214,7 +214,7 @@
   background-color: #eee;
   margin: 15px 0;
 }
-.__markdown_result__ cite {
+.__markdown_result__ mark {
   color: #c7254e;
   background-color: antiquewhite;
   padding: 0 5px;

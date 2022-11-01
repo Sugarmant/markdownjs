@@ -138,8 +138,8 @@ const handleEditor = (html)=>{
                     con = con.slice(first+1)
                     let second = con.indexOf('`')
                     if(second>-1 && pre[pre.length-1]!='>'){
-                        handled += pre+'<cite>`'
-                        handled += con.slice(0,second)+'`</cite>'
+                        handled += pre+'<mark>`'
+                        handled += con.slice(0,second)+'`</mark>'
                         con = con.slice(second+1)
                     }else{
                         
