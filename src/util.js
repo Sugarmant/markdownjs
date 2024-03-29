@@ -3,13 +3,14 @@ export function getCursor(dom){
     const selection = window.getSelection()
     if(selection.rangeCount==0){
         console.log('no range fount')
+        return [0,0]
     }
     const range = selection.getRangeAt(0)
     const start = countLength(dom,range.startContainer,range.startOffset)
     const end = countLength(dom,range.endContainer,range.endOffset)
     
     if((!start[0] || !end[0])){
-        throw new Error('Cursor not in the dom')
+        // throw new Error('Cursor not in the dom')
     }
     
     if(dom == range.startContainer){
@@ -46,7 +47,8 @@ export function getCursor(dom){
 export function setCursor(dom,start,end){
     const selection = window.getSelection()
     if(selection.rangeCount==0){
-        throw new Error('No range found')
+        console.log('No range found')
+        return
     }
     const range = selection.getRangeAt(0)
 

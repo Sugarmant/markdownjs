@@ -31,6 +31,7 @@ class Markdown{
         this.entry = document.querySelector(data.editor);
         this.stage = document.querySelector(data.stage);
         this.catalog = document.querySelector(data.catalog);
+        this.change = data.change
         this.cache = []
         this.cacheIndex = -1
         this.lastEdit;
@@ -104,6 +105,10 @@ class Markdown{
         this.renderEditor(text)
         this.saveCache(true)
     }
+    
+    getText(){
+        return this.entry.innerText
+    }
 
     refresh(text,pos){
         const position = pos?pos:getCursor(this.entry)
@@ -138,6 +143,7 @@ class Markdown{
         }else{
             this.cache[this.cacheIndex]['position'] = getCursor(this.entry)
         }
+        if(this.change) this.change(this.entry.innerText)
     }
 
     /* 撤销 */

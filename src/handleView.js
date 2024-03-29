@@ -1,4 +1,5 @@
 const handleView = (html)=>{
+    if(!html) return ''
     const strs = html.replace(/\r\n/g,'\n').split('\n')
 
     for(let i=0;i<strs.length;i++){

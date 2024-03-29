@@ -1,5 +1,6 @@
 /* 处理目录 */
 export default function getCatalog(text){
+    if(!text)return ''
     const arr = []
     text.split('\n').map((v,key)=>{
         const matched = v.match(/^#{1,6}\s/)

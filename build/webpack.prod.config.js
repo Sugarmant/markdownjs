@@ -6,7 +6,7 @@ module.exports = {
     entry: dirname + '/src/index.js',
     output: {
         filename:'markdown.js',
-        path: path.resolve('f://pro_website_gitee/Public/article/markdown'),
+        // path: path.resolve('f://pro_website_gitee/Public/article/markdown'),
         clean: true,
         environment: {
             arrowFunction: false,
